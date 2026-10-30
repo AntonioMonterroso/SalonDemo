@@ -4,7 +4,7 @@
    tendría Supabase, datos de ejemplo y reglas del negocio.
    ============================================================ */
 const CLAVE = MARCA.clave + ".datos";
-const VERSION = 5;
+const VERSION = 6;
 
 const CATEGORIAS = (MARCA.datos && MARCA.datos.categorias) || [
   { id: "unas", nombre: "Uñas", sub: "Manos y pies", icono: "hand", retoque: 21 },
@@ -18,7 +18,7 @@ const ESTADOS = {
   en_servicio: { t: "En servicio", c: "activo" }, terminada: { t: "Por cobrar", c: "cobro" }, pagada: { t: "Pagada", c: "listo" },
   cancelada: { t: "Cancelada", c: "apagado" }, falta: { t: "No vino", c: "malo" }
 };
-const METODOS = { efectivo: ["Efectivo", "cash"], tarjeta: ["Tarjeta", "card"], transferencia: ["Transferencia", "bank"], link: ["Link de pago", "link"], regalo: ["Tarjeta de regalo", "gift"], paquete: ["Paquete", "box"], membresia: ["Membresía", "crown"], anticipo: ["Anticipo", "check"] };
+const METODOS = { efectivo: ["Efectivo", "cash"], tarjeta: ["Tarjeta", "card"], transferencia: ["Transferencia", "bank"], link: ["Link de pago", "link"], regalo: ["Tarjeta de regalo", "gift"], paquete: ["Paquete", "box"], membresia: ["Membresía", "crown"], anticipo: ["Anticipo", "check"], vale: ["Tarjeta impresa", "tag"] };
 
 function semilla() {
   const D = MARCA.datos || {};
@@ -169,6 +169,15 @@ function semilla() {
     { id: uid(), codigo: "GR-NOIR", de: "Mamá", para: "Renata Paiz", mensaje: "Por tu graduación.", monto: 750, saldo: 750, diseno: "noir", creado: ahora - 2 * DIA }
   ];
 
+  /* tarjetas impresas: un lote con QR que se activa al vender (una por sesión) */
+  const tarjetas_impresas = [], pq0 = paquetes[0], codImp = new Set(), rndI = azar(4417);
+  for (let i = 0; i < 40; i++) {
+    let c; do { c = "TI-" + Math.floor(rndI() * 36 ** 5).toString(36).toUpperCase().padStart(5, "0"); } while (codImp.has(c)); codImp.add(c);
+    const t = { id: uid(), codigo: c, lote: 1, estado: "libre", creado: ahora - 30 * DIA };
+    if (pq0 && i < 5) Object.assign(t, { estado: i < 2 ? "usada" : "activa", servicio_id: pq0.servicio_id || paqItems(pq0)[0].servicio_id, combo: pq0.nombre, activada: ahora - 20 * DIA, vence: ahora + 100 * DIA, regalo: { para: "Lucía", de: "Tu hermana", mensaje: "Para que te consientas." } }, i < 2 ? { usada: { fecha: ahora - (12 - i * 5) * DIA, cita_id: null, clienta_id: null } } : {});
+    tarjetas_impresas.push(t);
+  }
+
   /* historial de citas y pagos */
   const citas = [], pagos = [];
   const pesos = D.servicios ? servicios.flatMap(x => x.precio < 120 ? [x.id, x.id, x.id] : [x.id]) : ["s02", "s02", "s02", "s01", "s06", "s06", "s07", "s03", "s04", "s05", "s10", "s10", "s11", "s12", "s13", "s16", "s17", "s14", "s15", "s20", "s22", "s23", "s23", "s24", "s25", "s30", "s31", "s32", "s33", "s35", "s35", "s36"];
@@ -270,7 +279,7 @@ function semilla() {
 
   return {
     version: VERSION, creado: ahora, config, estilistas, estaciones, servicios, productos, esmaltes, clientas, citas, pagos,
-    paquetes, paquetes_clienta, membresias, tarjetas_regalo, links_pago: [], movimientos_inventario: [], turnos_caja, lista_espera, resenas, mensajes: [], disenos: []
+    paquetes, paquetes_clienta, membresias, tarjetas_regalo, tarjetas_impresas, links_pago: [], movimientos_inventario: [], turnos_caja, lista_espera, resenas, mensajes: [], disenos: []
   };
 }
 
@@ -349,6 +358,12 @@ const paqQuedan = (p, sid) => { const it = paqItems(paqDe(p)).find(x => x.servic
 const paqActivo = p => { const q = paqDe(p); return !!q && paqUsadas(p) < paqSesiones(q); };
 const paquetesDe = k => db.listar("paquetes_clienta", p => p.clienta_id === k).filter(paqActivo).map(p => Object.assign({}, p, { paquete: paqDe(p) }));
 const comboRegalo = cod => db.listar("paquetes_clienta").find(p => p.regalo && p.regalo.codigo === cod);
+/* tarjetas impresas (vales con QR): libre → activa al venderse → usada al cobrar */
+const tarjetaImpresa = cod => db.listar("tarjetas_impresas").find(t => t.codigo === String(cod || "").trim().split("/").pop().toUpperCase());
+const estadoVale = t => t.estado === "activa" && t.vence && t.vence < Date.now() ? "vencida" : t.estado;
+const linkVale = t => urlBase() + "#/vale/" + t.codigo;
+const valeEnCita = cod => db.listar("citas").find(c => (c.vales || []).includes(cod) && !["pagada", "cancelada", "falta"].includes(c.estado));
+function codigoImpresa() { let c; do { c = "TI-" + Math.floor(Math.random() * 36 ** 5).toString(36).toUpperCase().padStart(5, "0"); } while (tarjetaImpresa(c)); return c; }
 function codigoRegalo() { let c; do { c = "GR-" + Math.random().toString(36).slice(2, 6).toUpperCase(); } while (db.listar("tarjetas_regalo").some(g => g.codigo === c) || comboRegalo(c)); return c; }
 const esmalte = id => db.obtener("esmaltes", id);
 function cumpleEn(k, dias = 0) { const c = cli(k); if (!c.cumple) return false; const [m, d] = c.cumple.split("-").map(Number); const hoy = new Date(); const f = new Date(hoy.getFullYear(), m - 1, d); const delta = Math.round((dia0(+f) - dia0()) / DIA); return delta >= 0 && delta <= dias; }
@@ -479,6 +494,7 @@ function registrarCobro(c, o) {
   });
   o.metodos.forEach(m => {
     if (m.metodo === "regalo") { const g = db.listar("tarjetas_regalo").find(x => x.codigo === m.ref); if (g) g.saldo = r2(Math.max(0, g.saldo - m.monto)); }
+    if (m.metodo === "vale") { const t = tarjetaImpresa(m.ref); if (t) { t.estado = "usada"; t.usada = { fecha: Date.now(), cita_id: pg.cita_id, clienta_id: pg.clienta_id }; } }
     if (m.metodo === "paquete") { const p = db.obtener("paquetes_clienta", m.ref); if (p) { p.usos = usosDe(p); p.usos[m.sid] = (p.usos[m.sid] || 0) + 1; p.usadas = paqUsadas(p); } }
     if (m.metodo === "membresia" && pg.clienta_id) { const k = cli(pg.clienta_id); if (k.membresia) { const mes = new Date().getMonth(); k.membresia.usos[mes + ":" + m.ref] = (k.membresia.usos[mes + ":" + m.ref] || 0) + 1; } }
   });

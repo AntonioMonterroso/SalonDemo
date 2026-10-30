@@ -159,7 +159,7 @@ h3 { font-size: 24px; }
 .pt li { position: relative; padding-left: 28px; color: var(--tinta2); }
 .pt li::before { content: ""; position: absolute; left: 2px; top: .5em; width: 14px; height: 8px; border-left: 2px solid var(--acento-texto); border-bottom: 2px solid var(--acento-texto); transform: rotate(-45deg); }
 .pt .chip { background: rgba(255,255,255,.8); }
-@media (max-width: 880px) { .bloque, .bloque.inv { grid-template-columns: 1fr; } .bloque.inv .pt { order: 0; } }
+@media (max-width: 880px) { .bloque, .bloque.inv { grid-template-columns: minmax(0, 1fr); } .bloque.inv .pt { order: 0; } }
 .dev-mac { max-width: 640px; margin: 0 auto; }
 .dev-mac .pant { border: 11px solid #151515; border-bottom-width: 16px; border-radius: 18px 18px 6px 6px; background: #151515; overflow: hidden; box-shadow: 0 30px 70px rgba(40,26,20,.22); }
 .dev-mac .pant img { width: 100%; border-radius: 6px; }
@@ -173,6 +173,7 @@ h3 { font-size: 24px; }
 .dev-iph img { width: 100%; }
 .pareja { display: flex; gap: 18px; justify-content: center; align-items: flex-start; }
 .pareja .dev-iph:nth-child(2) { margin-top: 50px; }
+.pareja .dev-iph { width: min(250px, calc(50% - 9px)); }
 .dev-tv { max-width: 660px; margin: 0 auto; }
 .dev-tv .marco { border: 9px solid #111; border-radius: 10px; background: #111; box-shadow: 0 40px 80px rgba(40,26,20,.28); }
 .dev-tv .marco img { width: 100%; }
@@ -400,7 +401,8 @@ const PAQ = [
 ];
 const EXTRA = [
   { id: "web", nombre: "Tarjeta de puntos web", activ: 1200, mes: 150, nota: "Incluida en Boutique y Signature", items: ["Sellos y puntos con la marca del salón", "Cada clienta recibe su link y su QR", "Se guarda en la pantalla de inicio del teléfono", "Recepción suma el sello al cobrar", "Premio y número de sellos a tu gusto"] },
-  { id: "wallet", nombre: "Apple Wallet + Google Wallet", activ: 2800, mes: 300, nota: "Requiere la tarjeta web · incluida en Signature", items: ["La tarjeta vive en la cartera del teléfono", "Se actualiza sola con cada sello", "Aviso en la pantalla bloqueada: «te falta un sello»", "QR para escanear en recepción", "iPhone y Android"] }
+  { id: "wallet", nombre: "Apple Wallet + Google Wallet", activ: 2800, mes: 300, nota: "Requiere la tarjeta web · incluida en Signature", items: ["La tarjeta vive en la cartera del teléfono", "Se actualiza sola con cada sello", "Aviso en la pantalla bloqueada: «te falta un sello»", "QR para escanear en recepción", "iPhone y Android"] },
+  { id: "impresas", nombre: "Tarjetas impresas con QR", activ: 900, mes: 0, nota: "Más tarjetas a precio de imprenta · no va en Wallet", items: ["Diseño con la marca y 100 tarjetas en cartulina gruesa", "Una tarjeta por sesión: se pueden regalar sueltas", "Recepción las escanea al cobrar y quedan activas", "Al canjearla se escanea y le da el paso", "La clienta también la ve en su teléfono", "Cada QR sirve una sola vez"] }
 ];
 const COMBO = { activ: 3200, mes: 850 };
 let IVA = false;
@@ -414,7 +416,8 @@ function paquetesHTML() {
 }
 function extrasHTML() {
   return EXTRA.map(x => `<div class="card paq extra"><span class="chip" style="align-self:flex-start;background:rgba(255,255,255,.75)">Nuevo</span><h3>${x.nombre}</h3>
-    <div class="precio"><b>${Q(conIva(x.mes))}</b><small class="tenue"> / mes</small></div><div class="activ">Activación única: <b style="color:var(--tinta)">${Q(conIva(x.activ))}</b></div>
+    ${x.mes ? `<div class="precio"><b>${Q(conIva(x.mes))}</b><small class="tenue"> / mes</small></div><div class="activ">Activación única: <b style="color:var(--tinta)">${Q(conIva(x.activ))}</b></div>`
+      : `<div class="precio"><b>${Q(conIva(x.activ))}</b><small class="tenue"> una vez</small></div><div class="activ">Sin mensualidad</div>`}
     <ul>${x.items.map(i => `<li>${i}</li>`).join("")}</ul><p class="nota">${x.nota}</p></div>`).join("");
 }
 function comboHTML() {
@@ -553,13 +556,14 @@ function abrirAbanico() {
 }
 
 /* ---------- arma tu plan ---------- */
-const PL = { paq: P.recomendado || "boutique", web: !P.generico, wallet: false, dominio: false };
+const PL = { paq: P.recomendado || "boutique", web: !P.generico, wallet: false, impresas: false, dominio: false };
 function calcPlan() {
   const pq = PAQ.find(x => x.id === PL.paq), lin = [[pq.nombre, pq.activ, pq.mes]];
   const webInc = PL.paq !== "esencial", walInc = PL.paq === "signature";
   const web = webInc || PL.web || (PL.wallet && !walInc);
   if (web && !webInc) { lin.push(["Tarjeta de puntos web", 1200, 150]); if (PL.paq === "esencial") lin.push(["Descuento de arranque", -500, 0]); }
   if (PL.wallet && !walInc) lin.push(["Apple Wallet + Google Wallet", 2800, 300]);
+  if (PL.impresas) lin.push(["Tarjetas impresas con QR · diseño y 100 tarjetas", 900, 0]);
   if (PL.dominio) lin.push(["Dominio propio · configuración", 250, 0]);
   const activ = lin.reduce((s, l) => s + l[1], 0), mes = lin.reduce((s, l) => s + l[2], 0);
   return { lin, activ: conIva(activ), mes: conIva(mes), webInc, walInc, web, pq };
@@ -570,6 +574,7 @@ function planHTML() {
       <div class="segp" role="tablist">${PAQ.map(p => `<button role="tab" aria-selected="${PL.paq === p.id}" class="${PL.paq === p.id ? "on" : ""}" data-paq="${p.id}">${p.nombre}<small>${p.desde ? "desde " : ""}${Q(conIva(p.mes))}/mes</small></button>`).join("")}</div>
       ${op("web", "Tarjeta de puntos web", r.webInc ? "Incluida en " + r.pq.nombre : "Sellos y puntos con link y QR", r.webInc ? "Incluida" : `+${Q(conIva(150))}<small>/mes</small>`, r.web, r.webInc || (PL.wallet && !r.walInc))}
       ${op("wallet", "Apple Wallet + Google Wallet", r.walInc ? "Incluida en Signature" : "La tarjeta en la cartera del teléfono · US$99/año de Apple aparte", r.walInc ? "Incluida" : `+${Q(conIva(300))}<small>/mes</small>`, r.walInc || PL.wallet, r.walInc)}
+      ${op("impresas", "Tarjetas impresas con QR", "Una por sesión, para entregar en mano o regalar", `+${Q(conIva(900))}<small> una vez</small>`, PL.impresas, false)}
       ${op("dominio", "Dominio propio", "Tu dirección .com · ≈ Q85 al año al registrador", `+${Q(conIva(250))}<small> una vez</small>`, PL.dominio, false)}
       ${op("iva", "Mostrar con IVA (12 %)", "Para facturar con IVA", "", IVA, false)}
     </div>
@@ -642,8 +647,9 @@ $("raiz").innerHTML = `
   ${bloque("t4", "Para el equipo", "Cada estilista, su día en el teléfono", "La siguiente clienta con su ficha, el diseño de uñas en grande, la fórmula de color de la última vez y lo que lleva ganado.", ["Ficha de belleza: color, pestañas, antes y después", "Consentimiento firmado con el dedo", "Meta del mes con su avance", "Venta de productos desde la silla"], `<div class="pareja">${iph("movil-estilista", "Vista de la estilista")}${iph("movil-estudio", "Estudio en el teléfono")}</div>`, true)}
   ${bloque("t1", "Nuevo · para que vuelvan", "Su tarjeta de puntos, en la cartera", "Cada visita suma un sello y cada quetzal suma puntos. La clienta la guarda en Apple Wallet o Google Wallet, o la abre con un link.", ["Sellos y premio que el salón decide", "Recepción suma el sello al cobrar", "Avisos en la pantalla bloqueada", "Funciona en iPhone y Android"], `<div class="pareja">${iph("movil-tarjeta", "Tarjeta de puntos")}${iph("movil-wallet", "Apple Wallet")}</div>`, false)}
   ${bloque("t2", "Nuevo · para vender más", "Combos y regalos desde recepción", "Recepción arma un combo en el momento: tres cortes, un tinte y una manicure, con el descuento que tú digas. Se le vende a la clienta o se regala, y llega por WhatsApp en un sobre que se abre.", ["Varios servicios, cada uno con sus sesiones", "Los paquetes de la casa se venden con un toque", "Tarjetas de regalo por el monto que quieran", "Cada visita descuenta su sesión al cobrar"], ipad("combo", "Combos y regalos en recepción"), true)}
-  ${bloque("t3", "Para la dueña", "Los números del mes, sin calculadora", "Ventas por día, servicio y estilista, ticket promedio, clientas que regresan, faltas y horas pico. Comisiones e inventario se calculan solos.", ["Pago del equipo por quincena", "Paquetes, membresías y puntos", "Mensajes de cumpleaños listos para enviar", "Exportar a Excel"], mac("admin-reportes", "Reportes"), false)}
-  ${bloque("t4", "Para la sala de espera", "Un detalle en la pared", "Una TV con los turnos, los diseños de la casa y las promociones del mes, con un QR para reservar.", ["Cualquier Smart TV con navegador", "Se actualiza sola"], tv("sala", "Pantalla de la sala de espera"), true)}
+  ${bloque("t3", "Extra · en la mano", "Tarjetas impresas con QR", "Para quien prefiere algo que se pueda tocar y regalar. Cada tarjeta vale una sesión: recepción la escanea al cobrar y queda activa; cuando la traen, se escanea otra vez y le da el paso. Quien la recibe también la ve en su teléfono.", ["Tarjetas con la marca del salón y un QR único", "Se activan al entregarlas, no antes", "Cada una sirve una sola vez", "Hoja lista para la imprenta"], `<div class="pareja">${iph("movil-entrega", "Recepción entrega las tarjetas")}${iph("movil-vale", "La tarjeta en el teléfono")}</div>`, false)}
+  ${bloque("t4", "Para la dueña", "Los números del mes, sin calculadora", "Ventas por día, servicio y estilista, ticket promedio, clientas que regresan, faltas y horas pico. Comisiones e inventario se calculan solos.", ["Pago del equipo por quincena", "Paquetes, membresías y puntos", "Mensajes de cumpleaños listos para enviar", "Exportar a Excel"], mac("admin-reportes", "Reportes"), true)}
+  ${bloque("t1", "Para la sala de espera", "Un detalle en la pared", "Una TV con los turnos, los diseños de la casa y las promociones del mes, con un QR para reservar.", ["Cualquier Smart TV con navegador", "Se actualiza sola"], tv("sala", "Pantalla de la sala de espera"), false)}
 </div></section>
 
 <section class="sec t2" id="colores"><div class="cont">
@@ -702,9 +708,9 @@ $("raiz").innerHTML = `
   ${cab("07", "Inversión", "Empiezas donde quieras <em>y subes cuando quieras.</em>")}
   <div class="rev" id="comboBox">${comboHTML()}</div>
   <div class="paquetes rev" id="paquetesBox">${paquetesHTML()}</div>
-  <h3 class="rev" style="margin-top:56px;font-size:clamp(30px,3.4vw,42px)">Nuevo: <em>tarjeta de puntos</em></h3>
+  <h3 class="rev" style="margin-top:56px;font-size:clamp(30px,3.4vw,42px)">Nuevo: <em>tarjetas para que vuelvan</em></h3>
   <p class="tx2 rev" style="margin-top:8px">Se suma a cualquier paquete.</p>
-  <div class="paquetes dos rev" id="extrasBox">${extrasHTML()}</div>
+  <div class="paquetes rev" id="extrasBox">${extrasHTML()}</div>
   <p class="nota">Apple cobra US$99 al año por la cuenta de desarrollador que firma las tarjetas (≈ Q770, a nombre del salón). Google Wallet no tiene costo.</p>
   <div class="card compra rev">
     <div><h3>¿Prefieres <em>comprarlo?</em></h3><p class="tx2" style="margin-top:6px">Pago único con el código y los datos a nombre del salón. Lleva un mantenimiento mensual que cubre alojamiento, respaldos y soporte.</p></div>
@@ -741,6 +747,7 @@ $("raiz").innerHTML = `
     <details><summary>¿Puedo seguir recibiendo citas por WhatsApp o en persona?</summary><p>Sí. Recepción las registra en segundos y todo queda en la misma agenda que las reservas en línea, sin choques.</p></details>
     <details><summary>¿Mis clientas necesitan iPhone para la tarjeta de puntos?</summary><p>No. Se guarda en Apple Wallet (iPhone) o en Google Wallet (Android), y quien no quiera la abre con su link desde cualquier teléfono.</p></details>
     <details><summary>¿Puedo vender combos para regalar?</summary><p>Sí. Recepción arma el combo o escoge un paquete de la casa, pone para quién es y le manda el regalo por WhatsApp. Quien lo recibe lo canjea con su código cuando llega, y cada visita descuenta su sesión.</p></details>
+    <details><summary>¿Y si alguien copia una tarjeta impresa?</summary><p>Cada tarjeta tiene un QR único que solo sirve una vez. Al escanearla, recepción ve si está activa, para qué servicio es y si ya se usó. Una copia de una tarjeta usada no da el paso.</p></details>
     <details><summary>¿Los datos de mis clientas están seguros?</summary><p>Sí. Cada persona entra con su PIN y ve solo lo que le toca. Nadie de afuera puede ver la lista de clientas.</p></details>
     <details><summary>¿Y si después quiero algo distinto?</summary><p>Se construye. El sistema es nuestro, así que lo adaptamos a cómo trabaja ${esc(CLIENTE)} y no al revés.</p></details>
   </div>

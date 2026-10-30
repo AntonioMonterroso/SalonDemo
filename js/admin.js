@@ -418,6 +418,16 @@ ADM_V.fidelidad = () => {
     <div class="adm-regalos">${regalos.slice().sort((a, b) => b.creado - a.creado).map((g, i) => `<article class="adm-reg rev" style="--i:${i + 2}">${admRegaloVisual(g)}
       <div class="fila"><div class="row-t"><b class="small">Saldo ${Q(g.saldo)} de ${Q(g.monto)}</b><small class="tenue">${esc(g.para)} · ${fechaCorta(g.creado)}</small></div><a class="btn btn-s btn-ch btn-i" href="${admLinkRegalo(g)}" target="_blank" rel="noopener" aria-label="Abrir tarjeta">${ic("link")}</a></div>
       <div class="barra"><i style="width:${g.monto ? g.saldo / g.monto * 100 : 0}%"></i></div></article>`).join("")}</div>`;
+  if (t === "impresas") {
+    const ti = db.listar("tarjetas_impresas"), libres = ti.filter(x => x.estado === "libre").length, act = ti.filter(x => x.estado === "activa"), mes0 = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime();
+    const usadas = ti.filter(x => x.estado === "usada").sort((a, b) => b.usada.fecha - a.usada.fecha), lotes = [...new Set(ti.map(x => x.lote))].sort((a, b) => b - a);
+    const fila = x => `<button class="row click" data-a="admVale" data-v="${x.codigo}"><span class="adm-av-reg">${ic(x.estado === "usada" ? "check" : "tag")}</span><span class="row-t"><b>${esc(serv(x.servicio_id).nombre)}</b><small>${esc(x.combo || "")}${x.regalo && x.regalo.para ? " · para " + esc(x.regalo.para) : ""} · ${x.estado === "usada" ? "usada el " + fechaCorta(x.usada.fecha) : (estadoVale(x) === "vencida" ? "venció el " : "vence el ") + fechaCorta(x.vence)}</small></span><span class="tenue xs num">${x.codigo}</span></button>`;
+    cuerpo = `<div class="adm-sub rev"><h2>Tarjetas impresas</h2><span class="tenue small">Una por sesión · se activan al entregarlas</span><span class="esp"></span><button class="btn btn-p btn-ch" data-a="admLote">${ic("plus")}<span>Lote nuevo</span></button></div>
+    <div class="g3 rev"><div class="card kpi"><small>En blanco</small><b class="num">${libres}</b><span class="tenue xs">${libres < 15 ? "Conviene pedir otro lote" : "Listas para vender"}</span></div><div class="card kpi"><small>Activas por canjear</small><b class="num">${act.length}</b><span class="tenue xs">${Q(sum(act, x => serv(x.servicio_id).precio || 0))} en servicios</span></div><div class="card kpi"><small>Canjeadas este mes</small><b class="num">${usadas.filter(x => x.usada.fecha >= mes0).length}</b><span class="tenue xs">${usadas.length} en total</span></div></div>
+    <div class="fila-w rev mt">${lotes.map(l => `<a class="btn btn-s btn-ch" href="#/imprimir/${l}" target="_blank" rel="noopener">${ic("download")}Hoja del lote ${l} · ${ti.filter(x => x.lote === l).length}</a>`).join("")}</div>
+    <div class="g2 mt"><section class="rev"><div class="adm-sub"><h2>Activas</h2></div>${act.length ? `<div class="lista">${act.map(fila).join("")}</div>` : `<div class="card">${vacio("Ninguna activa. Se activan al vender un combo en tarjetas impresas.")}</div>`}</section>
+      <section class="rev"><div class="adm-sub"><h2>Canjeadas</h2></div>${usadas.length ? `<div class="lista">${usadas.slice(0, 10).map(fila).join("")}</div>` : `<div class="card">${vacio("Todavía no se ha canjeado ninguna.")}</div>`}</section></div>`;
+  }
   if (t === "puntos") {
     const top = db.listar("clientas").sort((a, b) => (b.puntos || 0) - (a.puntos || 0)).slice(0, 8), c = cfg();
     cuerpo = `<div class="g2 mt">${admEditable("puntos", "Reglas de puntos y cumpleaños", "star",
@@ -427,7 +437,7 @@ ADM_V.fidelidad = () => {
   }
   return `${admCab("Fidelidad", "Que vuelvan, y que vuelvan seguido")}
   <div class="g4 adm-kpis">${admKpi("Socias activas", socias.length, "", "Membresías", 0)}${admKpi("Ingreso fijo al mes", recurrente, "q", "Por membresías", 1)}${admKpi("Paquetes activos", paqAct.length, "", "", 2)}${admKpi("Saldo en regalos", saldoReg, "q", `${regalos.length} tarjetas`, 3)}</div>
-  <div class="rev adm-tabs">${seg("admFid", [["membresias", "Membresías", "crown"], ["paquetes", "Paquetes", "box"], ["regalos", "Regalos", "gift"], ["puntos", "Puntos", "star"]], t)}</div>
+  <div class="rev adm-tabs">${seg("admFid", [["membresias", "Membresías", "crown"], ["paquetes", "Paquetes", "box"], ["regalos", "Regalos", "gift"], ["impresas", "Impresas", "tag"], ["puntos", "Puntos", "star"]], t)}</div>
   ${cuerpo}`;
 };
 A.admSociaQuitar = async el => {
@@ -449,6 +459,19 @@ F.admSocia = (f, d) => {
   cerrar(); toast(`${k.nombre.split(" ")[0]} ya es socia de ${mb.nombre}`, "crown");
 };
 A.admPaqVender = () => abrir("vender", { modo: "combo" });
+A.admVale = el => abrir("vale", { cod: el.dataset.v });
+A.admLote = () => abrir("admLote", { n: 100 });
+MODALES.admLote = m => `${cab("Lote nuevo de tarjetas", "Cada una lleva un QR único")}<div class="modal-c pila">
+    <div class="vale-ver">${valeHTML({ codigo: "TI-·····" })}</div>
+    <div><p class="eyebrow">Cuántas</p><div class="fila-w">${[50, 100, 200, 500].map(n => `<button class="rc-tog rc-tog-s ${m.n === n ? "on" : ""}" data-a="admLoteN" data-v="${n}"><b>${n}</b></button>`).join("")}</div></div>
+    <p class="tenue small">Se crea la hoja para la imprenta, ocho por página carta. Las tarjetas quedan en blanco hasta que recepción las active al vender.</p></div>
+  <div class="modal-p"><button class="btn btn-s" data-a="cerrar">Cancelar</button><button class="btn btn-p" data-a="admLoteCrear">${ic("download")}Crear ${m.n} y abrir la hoja</button></div>`;
+A.admLoteN = el => { mt().n = +el.dataset.v; renderModal(); };
+A.admLoteCrear = () => {
+  const n = mt().n, lote = Math.max(0, ...db.listar("tarjetas_impresas").map(x => x.lote || 0)) + 1;
+  for (let i = 0; i < n; i++) db.d.tarjetas_impresas.push({ id: uid(), codigo: codigoImpresa(), lote, estado: "libre", creado: Date.now() });
+  db.cambio(); cerrar(); toast(`Lote ${lote}: ${n} tarjetas listas para imprimir`, "tag"); window.open("#/imprimir/" + lote, "_blank");
+};
 A.admRegaloNuevo = () => abrir("vender", { modo: "monto" });
 MODALES.admRegaloListo = m => {
   const g = db.obtener("tarjetas_regalo", m.id); if (!g) return cab("Tarjeta");

@@ -356,3 +356,37 @@ body.estudio-body { background: var(--fondo2); }
 .regalo-items li { display: flex; justify-content: space-between; gap: 12px; }
 .regalo-items b { display: inline; font-size: 14px; }
 .regalo-saldo .regalo-nom { font-size: 26px; line-height: 1.15; }
+/* ---------- tarjeta impresa (vale con QR), 85 × 55 mm ---------- */
+.vale { aspect-ratio: 85 / 55; width: 100%; max-width: 380px; border-radius: 1em; padding: 1.05em 1.1em; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1em; color: #fff;
+  background: linear-gradient(165deg, var(--acento-texto), color-mix(in srgb, var(--acento-texto) 75%, #000)); box-shadow: 0 2px 6px rgba(0,0,0,.1), 0 18px 40px color-mix(in srgb, var(--acento-texto) 28%, transparent); }
+.vale.grande { margin: 0 auto; max-width: 420px; }
+.vale-izq { display: grid; align-content: space-between; gap: .5em; min-width: 0; }
+.vale-cab { display: flex; align-items: center; gap: .55em; }
+.vale-cab b { display: block; font: 500 1.1em/1.1 var(--f-titulo); }
+.vale small { display: block; font: 700 .66em/1.25 var(--f-texto); letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.92); }
+.vale-tx { font: italic 400 1.2em/1.2 var(--f-titulo); }
+.vale-qr { align-self: center; display: grid; justify-items: center; gap: .35em; background: #fff; color: #333; border-radius: .7em; padding: .55em .55em .45em; }
+.vale-qr .qr { width: 7em; height: 7em; }
+.vale-qr small { color: #3a3a3a; letter-spacing: .14em; }
+.vale-qr-v { display: grid; place-items: center; color: var(--acento-texto); } .vale-qr-v .ic { width: 60%; height: 60%; stroke-width: 1.4; }
+.vale .logo-tx { fill: #fff; }
+.vale-pag { max-width: 520px; display: grid; gap: 18px; }
+.vale-info { display: flex; align-items: center; gap: 14px; }
+.vale-info .row-t small { display: block; color: var(--tenue); margin-top: 2px; }
+.vale-ic { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; flex: none; background: var(--acento-suave); color: var(--acento-texto); }
+.vale-ic .ic { width: 22px; height: 22px; }
+.vale-ic.activa { background: var(--ok-s); color: var(--ok); } .vale-ic.vencida { background: var(--aviso-s); color: var(--aviso); }
+/* hoja para imprenta */
+.imp-hoja { max-width: 980px; margin: 0 auto; padding: 32px 16px 64px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+.imp-cab { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between; }
+.imp-cab > div { flex: 1 1 280px; min-width: 0; }
+.imp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 16px; }
+.vale.imp { max-width: none; }
+@media print {
+  @page { size: letter; margin: 10mm; }
+  body.imprimir-body { background: #fff; }
+  .imprimir-body .imp-cab, .imprimir-body .barra-staff, .imprimir-body #avisos { display: none !important; }
+  .imp-hoja { padding: 0; max-width: none; }
+  .imp-grid { grid-template-columns: repeat(2, 85mm); gap: 4mm 8mm; justify-content: center; }
+  .vale.imp { width: 85mm; height: 55mm; font-size: 9.5pt; box-shadow: none; border-radius: 3mm; break-inside: avoid; -webkit-print-color-adjust: exact; print-color-adjust: exact; outline: .2mm dashed #bbb; outline-offset: 1.5mm; }
+}

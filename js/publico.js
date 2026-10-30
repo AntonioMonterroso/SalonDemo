@@ -418,6 +418,41 @@ function tarjetaPuntosHTML(k, o = {}) {
     ${o.qr ? `<div class="tp-qr-w"><div class="qr" data-qr="${esc(k.tarjeta)}"></div><small>${esc(k.tarjeta)}</small></div>` : ""}
   </div>`;
 }
+/* tarjeta impresa: el frente es igual para todo el lote; lo que vale se ve al escanearla */
+function valeHTML(t, o = {}) {
+  return `<div class="vale ${o.cls || ""}">
+    <div class="vale-izq"><div class="vale-cab">${logo(30)}<div><b>${esc(MARCA.nombre)}</b><small>Tarjeta de servicio</small></div></div>
+      <p class="vale-tx">Escanéala para ver lo que te regalaron</p><small>Se canjea en recepción</small></div>
+    <div class="vale-qr">${t.codigo && !t.codigo.includes("·") ? `<div class="qr" data-qr="${esc(linkVale(t))}"></div>` : `<div class="qr vale-qr-v">${ic("qr")}</div>`}<small class="num">${esc(t.codigo || "")}</small></div>
+  </div>`;
+}
+A.valeReservar = el => { const s = serv(el.dataset.v); ui.borrador.reserva = { servs: [s.id], paso: 2, est: "" }; ui.tabs.resCat = s.cat; guardarUI(); location.hash = "#/reservar"; };
+VISTAS.vale = p => {
+  const t = tarjetaImpresa(p[0] || "");
+  if (!t) return `${topPublico()}<main class="cont" style="max-width:520px">${vacio("No encontramos esa tarjeta.")}</main>`;
+  const st = estadoVale(t), s = t.servicio_id ? serv(t.servicio_id) : null;
+  return `${topPublico()}<main class="cont tarjeta-pag vale-pag">
+    <div class="rev"><p class="eyebrow">${st === "libre" ? "Tarjeta de servicio" : t.regalo && t.regalo.para ? "Para " + esc(t.regalo.para) : esc(t.combo || "Tu tarjeta")}</p><h1 class="h2">${s ? esc(s.nombre) : "Todavía en blanco"}</h1></div>
+    <div class="rev" style="--i:1">${valeHTML(t, { cls: "grande" })}</div>
+    ${t.regalo && t.regalo.mensaje ? `<div class="rev centro" style="--i:2"><p class="regalo-msj serif">“${esc(t.regalo.mensaje)}”</p>${t.regalo.de ? `<p class="tenue">— ${esc(t.regalo.de)}</p>` : ""}</div>` : ""}
+    <div class="card rev vale-info" style="--i:3"><span class="vale-ic ${st}">${ic(st === "usada" ? "check" : "tag")}</span><div class="row-t">
+      <b>${{ libre: "Esta tarjeta todavía no está activa", activa: "Lista para usar", vencida: "Esta tarjeta ya venció", usada: "Ya la usaste" }[st]}</b>
+      <small>${{ libre: "Se activa en recepción cuando la compras.", activa: "Vale por un " + esc((s ? s.nombre : "").toLowerCase()) + " hasta el " + fechaCorta(t.vence) + ". Enséñala en recepción.", vencida: "Venció el " + fechaCorta(t.vence) + ". Pregunta en recepción.", usada: "Se canjeó el " + (t.usada ? fechaCorta(t.usada.fecha) : "") + ". ¡Gracias por venir!" }[st]}</small></div></div>
+    ${st === "activa" ? `<button class="btn btn-p btn-g btn-b rev" style="--i:4" data-a="valeReservar" data-v="${s.id}">${ic("cal")}Reservar mi ${esc(s.nombre.toLowerCase())}</button>` : ""}
+    <p class="tenue xs centro mt">Código ${t.codigo}</p>
+  </main>`;
+};
+CLASE_RUTA.vale = "tarjeta-body";
+
+/* hoja para la imprenta: tarjetas de 85 × 55 mm, ocho por página carta */
+VISTAS.imprimir = p => {
+  const lote = +p[0] || 1, ts = db.listar("tarjetas_impresas", t => t.lote === lote);
+  return `<main class="imp-hoja"><div class="imp-cab"><div><p class="eyebrow">Lote ${lote}</p><h1 class="h2">${ts.length} tarjetas para imprimir</h1><p class="tenue small">Tamaño tarjeta de presentación (85 × 55 mm), ocho por hoja carta. Cada QR es único.</p></div>
+    <button class="btn btn-p" data-a="impImprimir">${ic("download")}Imprimir o guardar PDF</button></div>
+    <div class="imp-grid">${ts.map(t => valeHTML(t, { cls: "imp" })).join("")}</div></main>`;
+};
+CLASE_RUTA.imprimir = "imprimir-body"; ROL_DE.imprimir = "admin";
+A.impImprimir = () => window.print();
 function walletBotones(k) {
   const w = (k && k.wallet) || {};
   const b = (t, txt) => w[t] ? `<span class="wallet-b listo">${ic("check")}En tu ${txt}</span>` : `<button class="wallet-b ${t}" data-a="walletAbrir" data-v="${t}" data-k="${k ? k.tarjeta : ""}">${ic("card")}<span>Agregar a <b>${txt}</b></span></button>`;
