@@ -280,7 +280,7 @@ h3 { font-size: 24px; }
 .rango label { display: flex; justify-content: space-between; font-weight: 500; font-size: 15px; margin-bottom: 8px; }
 .rango output { font: italic 400 24px var(--f-titulo); color: var(--acento-texto); }
 input[type=range] { width: 100%; accent-color: var(--acento-texto); height: 28px; }
-.resultado { background: radial-gradient(60% 80% at 100% 0%, color-mix(in srgb, var(--i1) 35%, transparent), transparent 70%), var(--oscuro); color: var(--fondo); }
+.resultado { background: var(--oscuro); color: var(--fondo); }
 .resultado .grande { font: 400 clamp(48px, 6vw, 72px)/1 var(--f-titulo); letter-spacing: -.02em; }
 .resultado .tenue { color: color-mix(in srgb, var(--fondo) 66%, transparent); }
 .res-fila { display: flex; justify-content: space-between; gap: 12px; padding: 11px 0; border-top: 1px solid rgba(255,255,255,.12); font-size: 15px; }
@@ -325,7 +325,7 @@ input[type=range] { width: 100%; accent-color: var(--acento-texto); height: 28px
 .segp button small { display: block; font-weight: 500; font-size: 12px; color: var(--tenue); margin-top: 2px; }
 .segp button.on { background: var(--tarjeta); color: var(--tinta); box-shadow: 0 1px 3px rgba(0,0,0,.1); }
 .segp button:active { transform: scale(.97); }
-.total { position: sticky; top: 80px; background: radial-gradient(70% 70% at 100% 0%, color-mix(in srgb, var(--i2) 40%, transparent), transparent 70%), var(--oscuro); color: var(--fondo); display: grid; gap: 4px; }
+.total { position: sticky; top: 80px; background: var(--oscuro); color: var(--fondo); display: grid; gap: 4px; }
 .total .tenue { color: color-mix(in srgb, var(--fondo) 66%, transparent); }
 .total .grande { font: 400 clamp(46px, 5vw, 62px)/1.05 var(--f-titulo); letter-spacing: -.02em; }
 .total .lin { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; padding: 8px 0; border-top: 1px solid rgba(255,255,255,.12); }
@@ -353,15 +353,14 @@ details[open] summary::after { transform: rotate(45deg); }
 details p { color: var(--tinta2); margin-top: 10px; max-width: 46em; }
 
 /* cierre */
-.cierre { text-align: center; }
-.cierre h2 { font-size: clamp(56px, 9vw, 130px); background: linear-gradient(100deg, #fff, var(--t1) 40%, var(--t2) 70%, var(--t4)); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: .06em; }
-.cierre .lead { margin: 18px auto 0; color: color-mix(in srgb, var(--fondo) 75%, transparent); }
+.cierre { text-align: center; border-top: 1px solid var(--linea); }
+.cierre h2 { font-size: clamp(56px, 9vw, 130px); color: var(--tinta); padding-bottom: .06em; }
+.cierre .lead { margin: 18px auto 0; }
 .cierre .acc { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 36px; }
-.cierre .btn-l { color: var(--fondo); }
 .firma { margin: 70px auto 0; display: grid; justify-items: center; gap: 6px; }
-.firma .firma-m { width: 90px; height: 74px; mix-blend-mode: normal; filter: invert(1); opacity: .9; }
+.firma .firma-m { width: 90px; height: 74px; }
 .firma b { font: italic 400 28px var(--f-titulo); }
-.firma small { color: color-mix(in srgb, var(--fondo) 60%, transparent); letter-spacing: .2em; text-transform: uppercase; font-size: 11px; }
+.firma small { color: var(--tenue); letter-spacing: .2em; text-transform: uppercase; font-size: 11px; }
 .firmas { display: none; }
 .pie { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 26px 0 34px; color: var(--tenue); font-size: 13px; flex-wrap: wrap; text-align: center; }
 
@@ -745,7 +744,7 @@ $("raiz").innerHTML = `
   </div>
 </div></section>
 
-<section class="sec osc cierre" id="cierre"><div class="cont">
+<section class="sec cierre" id="cierre"><div class="cont">
   <p class="eyebrow rev">Siguiente paso</p>
   <h2 class="rev">Empecemos.</h2>
   <p class="lead rev">En 30 minutos te mostramos la demo con ${P.generico ? "tus servicios y tus colores" : "los servicios y los colores de " + esc(M.nombre)}, y resolvemos dudas.</p>
