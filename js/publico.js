@@ -111,7 +111,7 @@ DESPUES[""] = (p, cambio) => {
       const box = $("#heroMano"); if (!box || document.hidden) return;
       k = (k + 1) % LOOKBOOK.length; const l = LOOKBOOK[k];
       box.classList.add("cambia");
-      setTimeout(() => { box.innerHTML = manoSVG({ preset: l.id }, { tam: 300 }); $("#heroNombre").textContent = l.nombre; $("#heroLink").href = "#/disenar/preset/" + l.id; box.classList.remove("cambia"); }, 260);
+      setTimeout(() => { if (!box.isConnected) return; box.innerHTML = manoSVG({ preset: l.id }, { tam: 300 }); $("#heroNombre").textContent = l.nombre; $("#heroLink").href = "#/disenar/preset/" + l.id; box.classList.remove("cambia"); }, 260);
     }, 3400);
   }
 };
@@ -398,11 +398,19 @@ function arrancar() {
    Tarjeta de puntos (portal web + Apple Wallet / Google Wallet simulados)
    ============================================================ */
 function tarjetaPuntosHTML(k, o = {}) {
-  const L = lealtad(), n = Math.min(k.sellos || 0, L.sellos);
-  return `<div class="tpuntos ${o.grande ? "grande" : ""}">
-    <div class="tp-cab">${logo(o.grande ? 42 : 34)}<div class="esp"><b>${esc(MARCA.nombre)}</b><small>Tarjeta de puntos</small></div><div class="tp-pts"><small>Puntos</small><b class="num">${(k.puntos || 0).toLocaleString("en-US")}</b></div></div>
-    <div class="tp-sellos" style="--n:${L.sellos}">${Array.from({ length: L.sellos }, (_, i) => `<i class="${i < n ? "on" : ""} ${i === L.sellos - 1 ? "premio" : ""}" style="--i:${i}">${i < n ? ic("check") : i === L.sellos - 1 ? ic("gift") : ""}</i>`).join("")}</div>
-    <div class="tp-pie"><div><small>Clienta</small><b>${esc(k.nombre)}</b></div><div class="derecha"><small>Código</small><b class="num">${esc(k.tarjeta || "")}</b></div></div>
+  /* como un pase de Apple Wallet: logo y puntos arriba, franja de sellos, datos y (en Wallet) el QR */
+  const L = lealtad(), n = Math.min(k.sellos || 0, L.sellos), ini = esc(MARCA.inicial || (MARCA.corto || MARCA.nombre).charAt(0));
+  const giro = [-8, 5, -3, 7, -6, 4, -2, 6];
+  const sello = i => {
+    const on = i < n, premio = i === L.sellos - 1;
+    return `<i class="${on ? "on" : ""} ${premio ? "premio" : ""}" style="--i:${i};--r:${giro[i % 8]}deg">${premio ? ic("gift") : on ? `<span>${ini}</span>` : ""}</i>`;
+  };
+  const campo = (t, v, cls = "") => `<div class="${cls}"><small>${t}</small><b>${v}</b></div>`;
+  return `<div class="tpuntos ${o.grande ? "grande" : ""} ${o.qr ? "con-qr" : ""}">
+    <div class="tp-cab">${logo(o.grande ? 38 : 34)}<b class="esp">${esc(MARCA.nombre)}</b><div class="tp-pts"><small>Puntos</small><b class="num">${(k.puntos || 0).toLocaleString("en-US")}</b></div></div>
+    <div class="tp-banda"><div class="tp-sellos" style="--n:${L.sellos}">${Array.from({ length: L.sellos }, (_, i) => sello(i)).join("")}</div></div>
+    <div class="tp-campos">${campo("Clienta", esc(k.nombre))}${campo("Sellos", `${n} de ${L.sellos}`)}${o.qr ? campo("Nivel", nivelDe(k).n, "derecha") : campo("Código", esc(k.tarjeta || ""), "derecha num")}</div>
+    ${o.qr ? `<div class="tp-qr-w"><div class="qr" data-qr="${esc(k.tarjeta)}"></div><small>${esc(k.tarjeta)}</small></div>` : ""}
   </div>`;
 }
 function walletBotones(k) {
@@ -455,10 +463,7 @@ MODALES.wallet = m => {
   const k = clientaPorTarjeta(m.cod); if (!k) return cab("Wallet");
   const L = lealtad(), ap = m.w === "apple", faltan = L.sellos - (k.sellos || 0);
   const pase = ap
-    ? `<div class="wpass apple"><div class="wp-top">${logo(30)}<b class="esp">${esc(MARCA.nombre)}</b><div class="derecha"><small>PUNTOS</small><b class="num">${k.puntos || 0}</b></div></div>
-        <div class="wp-strip"><div class="tp-sellos" style="--n:${L.sellos}">${Array.from({ length: L.sellos }, (_, i) => `<i class="${i < (k.sellos || 0) ? "on" : ""}">${i < (k.sellos || 0) ? ic("check") : ""}</i>`).join("")}</div></div>
-        <div class="wp-campos"><div><small>CLIENTA</small><b>${esc(k.nombre)}</b></div><div><small>SELLOS</small><b>${k.sellos || 0} / ${L.sellos}</b></div><div><small>NIVEL</small><b>${nivelDe(k).n}</b></div></div>
-        <div class="wp-qr"><div class="qr" data-qr="${esc(k.tarjeta)}"></div><small>${esc(k.tarjeta)}</small></div></div>`
+    ? tarjetaPuntosHTML(k, { qr: true })
     : `<div class="wpass google"><div class="wp-top">${logo(34)}<b class="esp">${esc(MARCA.nombre)}</b></div>
         <p class="wp-g-n">${esc(k.nombre)}</p><div class="wp-campos"><div><small>Puntos</small><b class="num">${k.puntos || 0}</b></div><div><small>Sellos</small><b>${k.sellos || 0} de ${L.sellos}</b></div></div>
         <div class="wp-qr"><div class="qr" data-qr="${esc(k.tarjeta)}"></div><small>${esc(k.tarjeta)}</small></div></div>`;
