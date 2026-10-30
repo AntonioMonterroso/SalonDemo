@@ -243,13 +243,35 @@ h3 { font-size: 24px; }
 @media (max-width: 880px) { .vivo-pasos { grid-template-columns: 1fr 1fr; } .escena { grid-template-columns: 1fr; justify-items: center; } .telefono { width: min(280px, 76vw); margin-bottom: 0; } .cable { display: none; } .tablet { width: 100%; } }
 
 /* comparativa */
-.tabla-env { margin-top: 40px; background: var(--tarjeta); border-radius: var(--r); box-shadow: var(--sombra); overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 640px; }
-th, td { padding: 16px 18px; text-align: left; border-bottom: 1px solid var(--linea); vertical-align: top; }
-thead th { font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--tenue); font-weight: 500; }
-th.nos, td.nos { background: var(--t1); font-weight: 600; color: var(--tinta); }
-tbody th { font-weight: 500; color: var(--tinta2); }
-.si { color: var(--acento-texto); font-weight: 600; } .no { color: var(--tenue); }
+.tabla-env { margin-top: 40px; background: var(--tarjeta); border-radius: var(--r); box-shadow: var(--sombra); overflow: hidden; }
+.comp { width: 100%; border-collapse: collapse; font-size: 15px; table-layout: fixed; }
+.comp th, .comp td { padding: 16px 14px; text-align: center; border-bottom: 1px solid var(--linea); vertical-align: middle; }
+.comp tr:last-child th, .comp tr:last-child td { border-bottom: 0; }
+.comp thead th { font: 600 14px var(--f-texto); color: var(--tinta2); padding-top: 22px; }
+.comp thead th.nos { font: italic 500 19px var(--f-titulo); color: var(--acento-texto); }
+.comp tbody th { text-align: left; font-weight: 500; color: var(--tinta); width: 30%; padding-left: 22px; }
+.comp .nos { background: var(--t1); }
+.comp td { color: var(--tinta2); font-size: 14px; }
+.comp .q { display: block; font: 600 17px var(--f-texto); color: var(--tinta); white-space: nowrap; }
+.comp td.nos .q { color: var(--acento-texto); font-size: 19px; }
+.comp small { display: block; font-size: 12.5px; color: var(--tenue); margin-top: 2px; line-height: 1.35; }
+.ok { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--acento-texto); vertical-align: middle; }
+.ok::after { content: ""; width: 10px; height: 5px; margin-top: -3px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg); }
+.nada { color: color-mix(in srgb, var(--tenue) 70%, transparent); font-size: 18px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+@media (max-width: 720px) {
+  .comp thead { display: none; }
+  .comp, .comp tbody, .comp tr { display: block; }
+  .comp tr { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--linea); padding: 14px 16px 16px; gap: 8px; }
+  .comp tr:last-child { border-bottom: 0; }
+  .comp tbody th { grid-column: 1 / -1; width: auto; padding: 0 0 4px; border: 0; font-size: 15.5px; }
+  .comp td { display: flex; align-items: center; justify-content: space-between; gap: 8px; text-align: right; padding: 10px 12px; border: 0; border-radius: 14px; background: var(--fondo); min-width: 0; }
+  .comp td.nos { background: var(--t1); }
+  .comp td::before { content: attr(data-l); font-size: 12.5px; color: var(--tenue); text-align: left; }
+  .comp td.nos::before { color: var(--acento-texto); font-weight: 600; }
+  .comp td:has(.q) { flex-direction: column; align-items: flex-start; text-align: left; gap: 2px; }
+  .comp .q { white-space: normal; }
+}
 .nota { font-size: 12.5px; color: var(--tenue); margin-top: 12px; }
 
 /* calculadora */
@@ -402,6 +424,24 @@ function comboHTML() {
       <p class="tx2" style="margin-top:10px">Reservas en línea, recordatorios, agenda y la tarjeta de sellos para que sus clientas vuelvan. Cuando el salón crezca, se pasa a Boutique pagando solo la diferencia.</p></div>
     <div class="combo-p"><div class="precio"><b>${Q(conIva(COMBO.mes))}</b><small class="tenue"> / mes</small></div><div class="activ">Activación: <b style="color:var(--tinta)">${Q(conIva(COMBO.activ))}</b> <s>${Q(conIva(2500 + 1200))}</s></div>
       <p class="nota">¿Con Apple y Google Wallet? + ${Q(conIva(2800))} de activación y ${Q(conIva(300))} al mes.</p></div></div>`;
+}
+
+/* ---------- comparativa (en quetzales) ---------- */
+function comparativaHTML() {
+  const SI = '<span class="ok" role="img" aria-label="Sí"></span>', NO = '<span class="nada" role="img" aria-label="No">—</span>';
+  const cols = ["Tu sistema", "Fresha", "Vagaro", "Boulevard"];
+  const filas = [
+    ["Al mes, con 6 personas", [`<b class="q">${P.generico ? "Q1,500" : "Q850"}</b><small>fijo, sin comisiones</small>`, '<b class="q">≈ Q690</b><small>+ 20 % por clienta nueva</small>', '<b class="q">≈ Q460–770</b><small>+ extras</small>', '<b class="q">≈ Q1,300</b><small>o más</small>']],
+    ["Se paga en quetzales", [SI, NO, NO, NO]],
+    ["Página con tu marca y colores", [SI, "Solo un perfil", "Básica", SI]],
+    ["Diseñador de uñas en la cita", [SI, NO, NO, NO]],
+    ["Recepción en vivo", [SI, "Básica", "Básica", SI]],
+    ["Las clientas quedan contigo", [SI, NO, NO, NO]],
+    ["Ayuda por WhatsApp en español", [SI, NO, NO, NO]]
+  ];
+  return `<table class="comp"><thead><tr><th><span class="sr">Qué incluye</span></th>${cols.map((c, i) => `<th class="${i ? "" : "nos"}">${c}</th>`).join("")}</tr></thead><tbody>`
+    + filas.map(([n, v]) => `<tr><th scope="row">${n}</th>${v.map((x, i) => `<td class="${i ? "" : "nos"}" data-l="${cols[i]}">${x}</td>`).join("")}</tr>`).join("")
+    + `</tbody></table>`;
 }
 
 /* ---------- paletas pastel ---------- */
@@ -634,18 +674,8 @@ $("raiz").innerHTML = `
 
 <section class="sec" id="comparativa"><div class="cont">
   ${cab("05", "Reservas en línea", "¿Por qué propio <em>y no una plataforma?</em>", `Fresha, Vagaro y Boulevard son buenas herramientas, pero cobran en dólares, por persona o por comisión, y la clienta termina en su app, no en la de ${esc(CLIENTE)}.`)}
-  <div class="tabla-env rev"><table>
-    <thead><tr><th></th><th class="nos">Sistema propio</th><th>Fresha</th><th>Vagaro</th><th>Boulevard / Mangomint</th></tr></thead>
-    <tbody>
-      <tr><th>Costo mensual con 6 personas</th><td class="nos">${P.generico ? "Q1,500 fijo" : "Desde Q850 fijo"}</td><td>Por persona y comisión por clienta nueva</td><td>≈ US$60–100 + extras</td><td>Desde ≈ US$160–175</td></tr>
-      <tr><th>Precio en quetzales</th><td class="nos si">Sí</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
-      <tr><th>Tu página con tu marca y tus colores</th><td class="nos si">Sí, completa</td><td>Perfil dentro de su app</td><td>Perfil y página básica</td><td>Sí</td></tr>
-      <tr><th>Diseñador de uñas en la cita</th><td class="nos si">Sí</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
-      <tr><th>Recepción en vivo</th><td class="nos si">Sí</td><td>Básica</td><td>Básica</td><td class="si">Sí</td></tr>
-      <tr><th>Datos de tus clientas</th><td class="nos si">Tuyos, descargables</td><td>En su plataforma</td><td>En su plataforma</td><td>En su plataforma</td></tr>
-      <tr><th>Soporte</th><td class="nos si">Por WhatsApp, en español</td><td>Centro de ayuda</td><td>Centro de ayuda</td><td>Correo y chat</td></tr>
-    </tbody></table></div>
-  <p class="nota">Precios públicos aproximados en dólares a octubre de 2026. Pueden cambiar y no incluyen comisiones de procesamiento de pagos.</p>
+  <div class="tabla-env rev">${comparativaHTML()}</div>
+  <p class="nota">Precios aproximados en quetzales (US$1 ≈ Q7.70), octubre de 2026. Las plataformas cobran en dólares con tarjeta; pueden cambiar y no incluyen comisiones por pagos.</p>
 </div></section>
 
 <section class="sec t4" id="calculadora"><div class="cont">

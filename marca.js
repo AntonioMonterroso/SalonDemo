@@ -26,9 +26,9 @@ window.MARCA = {
     oscuro: "#1C1A17"
   },
   fuentes: {
-    titulo: "Bodoni Moda",
-    texto: "Jost",
-    url: "https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Jost:wght@300..800&display=swap"
+    titulo: "Playfair Display",
+    texto: "Nunito Sans",
+    url: "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,300..800;1,6..12,300..800&display=swap"
   },
   /* Logo: monograma dibujado. Si se define logoImg, se usa la imagen. */
   logoImg: "",
