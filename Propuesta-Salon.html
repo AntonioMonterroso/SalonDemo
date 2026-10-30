@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Reservas en línea, estudio de diseño de uñas, recepción en vivo y tarjeta de puntos en Apple y Google Wallet.">
-<meta name="theme-color" content="#1E1B14">
+<meta name="theme-color" content="#FAF7F2">
 <meta name="robots" content="noindex">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Sistema para salones de belleza · Monterroso Dev Studio">
@@ -23,190 +23,93 @@
 <script src="marca.js"></script>
 <title>Propuesta · Sistema para salón</title>
 <style>
-:root { --ease: cubic-bezier(0.23, 1, 0.32, 1); --r: 22px; --firma: #1C1A17; --gutter: 20px; --sombra: 0 1px 2px rgba(28,26,23,.04), 0 10px 32px rgba(28,26,23,.07); }
-@media (min-width: 760px) { :root { --gutter: 40px; } }
+:root { --ease: cubic-bezier(0.23, 1, 0.32, 1); --r: 24px; --gutter: 20px; --sombra: 0 1px 2px rgba(40,26,20,.04), 0 12px 36px rgba(40,26,20,.07);
+  --t1: #F8E9EC; --t2: #EEE9F6; --t3: #E6F1EA; --t4: #FBEFE3; }
+@media (min-width: 760px) { :root { --gutter: 44px; } }
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 72px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-body { margin: 0; background: var(--fondo); color: var(--tinta); font: 400 16.5px/1.6 var(--f-texto); font-variant-numeric: lining-nums; -webkit-font-smoothing: antialiased; overflow-x: clip; }
+body { margin: 0; background: var(--fondo); color: var(--tinta); font: 400 16.5px/1.6 var(--f-texto); font-variant-numeric: lining-nums; -webkit-font-smoothing: antialiased; overflow-x: clip; transition: background-color .5s var(--ease), color .5s var(--ease); }
 img, svg { display: block; max-width: 100%; }
 a { color: inherit; }
 h1, h2, h3, p { margin: 0; }
-.serif, h1, h2, h3 { font-family: var(--f-titulo); font-weight: 400; letter-spacing: -.015em; line-height: 1.08; }
 b, strong { font-weight: 600; }
+.serif, h1, h2, h3 { font-family: var(--f-titulo); font-weight: 400; letter-spacing: -.015em; line-height: 1.06; }
+h1 em, h2 em, h3 em, .serif em { font-style: italic; color: var(--acento-texto); }
 .eyebrow { font: 500 11.5px/1.2 var(--f-texto); letter-spacing: .24em; text-transform: uppercase; color: var(--acento-texto); margin-bottom: 14px; }
 .tx2 { color: var(--tinta2); } .tenue { color: var(--tenue); } .small { font-size: 13.5px; }
-.cont { max-width: 1120px; margin: 0 auto; padding: 0 var(--gutter); }
-section, section.cont { padding-top: clamp(56px, 9vw, 110px); }
-.rango output, .precio b, .grande { font-variant-numeric: lining-nums tabular-nums; font-feature-settings: "lnum" 1; }
-h2 { font-size: clamp(32px, 4.6vw, 52px); }
-h3 { font-size: 23px; }
-.lead { font-size: clamp(17px, 1.7vw, 20px); color: var(--tinta2); max-width: 36em; margin-top: 16px; line-height: 1.55; }
-.card { background: var(--tarjeta); border-radius: var(--r); box-shadow: var(--sombra); padding: 24px; }
-.rev { opacity: 0; transform: translateY(18px); transition: opacity .8s var(--ease), transform .8s var(--ease); transition-delay: calc(var(--i, 0) * 70ms); }
+.cont { max-width: 1160px; margin: 0 auto; padding: 0 var(--gutter); }
+.sec { padding: clamp(72px, 11vw, 140px) 0; position: relative; transition: background-color .5s var(--ease); }
+.sec.t1 { background: var(--t1); } .sec.t2 { background: var(--t2); } .sec.t3 { background: var(--t3); } .sec.t4 { background: var(--t4); } .sec.f2 { background: var(--fondo2); }
+.sec.osc { background: var(--oscuro); color: var(--fondo); } .sec.osc .tx2, .sec.osc .tenue { color: color-mix(in srgb, var(--fondo) 70%, transparent); } .sec.osc .eyebrow { color: var(--acento); } .sec.osc h2 em { color: var(--acento); }
+h2 { font-size: clamp(36px, 5.4vw, 68px); }
+h3 { font-size: 24px; }
+.lead { font-size: clamp(17px, 1.6vw, 20px); color: var(--tinta2); max-width: 36em; margin-top: 18px; line-height: 1.6; }
+.card { background: var(--tarjeta); border-radius: var(--r); box-shadow: var(--sombra); padding: 26px; }
+.rev { opacity: 0; transform: translateY(22px); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: calc(var(--i, 0) * 80ms); }
 .rev.visto { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { .rev { transform: none; transition: opacity .3s linear; } .anillos circle { animation: none !important; stroke-dashoffset: 0 !important; } }
-
-/* portada */
-.portada { min-height: 100vh; min-height: 100svh; display: grid; grid-template-rows: auto 1fr auto; padding: 24px var(--gutter) 32px; max-width: 1120px; margin: 0 auto; }
-.firma-top { display: flex; align-items: center; gap: 12px; }
-.firma-m { width: 46px; height: 38px; object-fit: contain; mix-blend-mode: multiply; }
-.firma-top b { display: block; font: 600 15px/1.15 var(--f-texto); letter-spacing: .02em; }
-.firma-top small { display: block; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--tenue); }
-.firma-top .fecha { margin-left: auto; text-align: right; }
-.portada-c { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; padding: 40px 0; }
-.portada h1 { font-size: clamp(40px, 5.8vw, 76px); letter-spacing: -.03em; line-height: 1.02; }
-.portada h1 em { font-style: italic; color: var(--acento-texto); }
-.sello { position: relative; display: grid; place-items: center; aspect-ratio: 1; max-width: 420px; width: 100%; justify-self: center; }
-.anillos { position: absolute; inset: 0; width: 100%; height: 100%; }
-.anillos circle { fill: none; stroke: var(--acento); stroke-dasharray: 100; stroke-dashoffset: 100; animation: trazo 2.2s var(--ease) forwards; }
-.anillos circle:nth-child(2) { animation-delay: .3s; opacity: .6; } .anillos circle:nth-child(3) { animation-delay: .55s; opacity: .4; }
-@keyframes trazo { to { stroke-dashoffset: 0; } }
-.sello-in { width: 62%; display: grid; place-items: center; animation: aparece 1.1s .4s var(--ease) both; }
-.sello-in svg { width: 100%; height: auto; }
-.sello-in .generico { font: 500 clamp(30px, 4vw, 48px)/1.1 var(--f-titulo); text-align: center; }
-@keyframes aparece { from { opacity: 0; transform: scale(.96); } }
-.portada-pie { display: flex; gap: 12px 28px; flex-wrap: wrap; align-items: center; color: var(--tinta2); font-size: 14px; border-top: 1px solid var(--linea); padding-top: 18px; }
-.portada-pie b { color: var(--tinta); }
-@media (max-width: 820px) { .portada-c { grid-template-columns: 1fr; } .sello { max-width: 260px; order: -1; } }
-
-/* problema */
-.dolores { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 0; margin-top: 36px; border-top: 1px solid var(--linea); }
-.dolor { padding: 24px 22px 26px 0; border-bottom: 1px solid var(--linea); }
-.dolor span { font: 500 15px var(--f-titulo); color: var(--acento-texto); }
-.dolor h3 { margin: 6px 0 8px; }
-
-/* pantallas */
-.pantalla { display: grid; grid-template-columns: 1fr 1.25fr; gap: clamp(24px, 4vw, 56px); align-items: center; margin-top: clamp(40px, 6vw, 72px); }
-.pantalla.inv { grid-template-columns: 1.25fr 1fr; } .pantalla.inv .pt { order: 2; }
-.pt ul { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 10px; }
-.pt li { position: relative; padding-left: 26px; color: var(--tinta2); }
-.pt li::before { content: ""; position: absolute; left: 2px; top: .55em; width: 12px; height: 7px; border-left: 2px solid var(--acento-texto); border-bottom: 2px solid var(--acento-texto); transform: rotate(-45deg); }
-.marco { border-radius: 18px; overflow: hidden; box-shadow: 0 2px 6px rgba(28,26,23,.06), 0 30px 70px rgba(28,26,23,.16); background: var(--tarjeta); border: 1px solid var(--linea); }
-.marco img { width: 100%; height: auto; }
-.telefonos { display: flex; gap: 16px; justify-content: center; align-items: flex-start; }
-.tel { width: min(46%, 250px); border-radius: 34px; padding: 8px; background: #141210; box-shadow: 0 30px 60px rgba(28,26,23,.25); }
-.tel img { border-radius: 27px; width: 100%; height: auto; }
-.tel:nth-child(2) { margin-top: 40px; }
-@media (max-width: 860px) { .pantalla, .pantalla.inv { grid-template-columns: 1fr; } .pantalla.inv .pt { order: 0; } }
-.chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: var(--acento-suave); color: var(--acento-texto); font-size: 12.5px; font-weight: 700; }
-
-/* comparativa */
-.tabla-env { margin-top: 28px; background: var(--tarjeta); border-radius: var(--r); box-shadow: var(--sombra); overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 640px; }
-th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--linea); vertical-align: top; }
-thead th { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--tenue); font-weight: 700; }
-th.nos, td.nos { background: color-mix(in srgb, var(--acento-suave) 60%, transparent); font-weight: 700; color: var(--tinta); }
-tbody th { font-weight: 600; color: var(--tinta2); }
-.si { color: #3F7D5C; font-weight: 700; } .no { color: #B23A3A; }
-.nota { font-size: 12.5px; color: var(--tenue); margin-top: 10px; }
-
-/* calculadora */
-.calc { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
-.calc .card { display: grid; gap: 22px; align-content: start; }
-.rango label { display: flex; justify-content: space-between; font-weight: 700; font-size: 14.5px; margin-bottom: 8px; }
-.rango output { font: 500 22px var(--f-titulo); color: var(--acento-texto); }
-input[type=range] { width: 100%; accent-color: var(--oscuro); height: 28px; }
-.resultado { background: var(--oscuro); color: var(--fondo); }
-.resultado .grande { font: 500 clamp(44px, 6vw, 64px)/1 var(--f-titulo); letter-spacing: -.02em; }
-.resultado .tx2, .resultado .tenue { color: color-mix(in srgb, var(--fondo) 70%, transparent); }
-.res-fila { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid rgba(255,255,255,.12); font-size: 15px; }
-.res-fila b { font-variant-numeric: tabular-nums; }
-@media (max-width: 760px) { .calc { grid-template-columns: 1fr; } }
-
-/* paquetes */
-.iva { display: inline-flex; gap: 2px; padding: 3px; border-radius: 12px; background: color-mix(in srgb, var(--tinta) 7%, transparent); margin-top: 20px; }
-.iva button { border: 0; background: transparent; padding: 8px 14px; border-radius: 9px; font: 600 13.5px var(--f-texto); color: var(--tinta2); cursor: pointer; transition: background-color .2s var(--ease), transform .16s var(--ease); }
-.iva button:active { transform: scale(.97); }
-.iva button.on { background: var(--tarjeta); color: var(--tinta); box-shadow: 0 1px 3px rgba(0,0,0,.1); }
-.paquetes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; align-items: stretch; }
-.paq { display: flex; flex-direction: column; gap: 14px; position: relative; }
-.paq.top { background: var(--oscuro); color: var(--fondo); transform: translateY(-10px); box-shadow: 0 30px 70px rgba(28,26,23,.25); }
-.paq.top .tx2, .paq.top .tenue, .paq.top li { color: color-mix(in srgb, var(--fondo) 78%, transparent); }
-.paq.top li::before { border-color: var(--acento); }
-.paq .reco { position: absolute; top: -12px; left: 24px; background: var(--acento); color: var(--acento-sobre); font-size: 11.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; }
-.precio b { font: 500 42px/1 var(--f-titulo); letter-spacing: -.02em; }
-.precio small { font-size: 14px; }
-.activ { font-size: 14px; }
-.paq ul { list-style: none; padding: 0; margin: 4px 0 0; display: grid; gap: 9px; font-size: 14.5px; }
-.paq li { position: relative; padding-left: 24px; color: var(--tinta2); }
-.paq li::before { content: ""; position: absolute; left: 2px; top: .5em; width: 11px; height: 6px; border-left: 2px solid var(--acento-texto); border-bottom: 2px solid var(--acento-texto); transform: rotate(-45deg); }
-.paq li.mas { font-weight: 700; color: inherit; padding-left: 0; } .paq li.mas::before { display: none; }
-.paquetes.dos { grid-template-columns: repeat(2, 1fr); margin-top: 18px; }
-.paq.extra .chip { align-self: flex-start; }
-.combo { margin-top: 26px; display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; align-items: center; border: 2px solid var(--acento); background: linear-gradient(135deg, var(--tarjeta), var(--acento-suave)); }
-.reco-l { display: inline-block; background: var(--acento); color: var(--acento-sobre); font-size: 11.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; }
-.combo-p { text-align: right; } .combo-p s { margin-left: 6px; }
-@media (max-width: 760px) { .combo { grid-template-columns: 1fr; } .combo-p { text-align: left; } .paquetes.dos { grid-template-columns: 1fr; } }
-.compra { margin-top: 18px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; }
-@media (max-width: 900px) { .paquetes { grid-template-columns: 1fr; } .paq.top { transform: none; } .compra { grid-template-columns: 1fr; } }
-
-/* incluye / cronograma */
-.g2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; margin-top: 28px; }
-.lista-l { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 10px; }
-.lista-l li { display: flex; justify-content: space-between; gap: 14px; border-bottom: 1px solid var(--linea); padding-bottom: 10px; color: var(--tinta2); }
-.lista-l li b { color: var(--tinta); white-space: nowrap; }
-.pasos { counter-reset: p; display: grid; gap: 14px; margin-top: 12px; }
-.paso { display: grid; grid-template-columns: 44px 1fr; gap: 14px; }
-.paso::before { counter-increment: p; content: counter(p); width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--acento-suave); color: var(--acento-texto); font: 600 18px var(--f-titulo); }
-
-/* dudas */
-details { border-bottom: 1px solid var(--linea); padding: 18px 0; }
-summary { cursor: pointer; font: 500 20px/1.3 var(--f-titulo); list-style: none; display: flex; justify-content: space-between; gap: 16px; }
-summary::-webkit-details-marker { display: none; }
-summary::after { content: "+"; font: 400 24px var(--f-texto); color: var(--acento-texto); transition: transform .25s var(--ease); }
-details[open] summary::after { transform: rotate(45deg); }
-details p { color: var(--tinta2); margin-top: 10px; max-width: 46em; }
-
-/* cierre */
-.cierre { margin-top: clamp(56px, 9vw, 110px); background: var(--oscuro); color: var(--fondo); border-radius: 36px; padding: clamp(32px, 6vw, 72px); display: grid; grid-template-columns: 1.2fr .8fr; gap: 32px; align-items: center; }
-.cierre .tx2 { color: color-mix(in srgb, var(--fondo) 72%, transparent); }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 54px; padding: 0 28px; border-radius: 999px; font-weight: 700; font-size: 16px; text-decoration: none; transition: transform .16s var(--ease), background-color .2s var(--ease); }
+@media (prefers-reduced-motion: reduce) { .rev { transform: none; transition: opacity .3s linear; } }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 13px; border-radius: 999px; background: var(--acento-suave); color: var(--acento-texto); font-size: 12.5px; font-weight: 600; letter-spacing: .02em; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 26px; border-radius: 999px; font: 600 15.5px var(--f-texto); letter-spacing: .01em; text-decoration: none; border: 0; cursor: pointer; transition: transform .16s var(--ease), background-color .3s var(--ease), color .3s var(--ease); }
 .btn:active { transform: scale(.97); }
 .btn-a { background: var(--acento); color: var(--acento-sobre); }
-.btn-s { box-shadow: inset 0 0 0 1px rgba(255,255,255,.3); color: var(--fondo); }
-@media (hover: hover) and (pointer: fine) { .btn-a:hover { background: color-mix(in srgb, var(--acento) 88%, #fff); } }
-.firmas { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 56px; }
-.firmas div { border-top: 1px solid var(--tinta); padding-top: 8px; font-size: 13px; color: var(--tenue); }
-.pie { display: flex; align-items: center; gap: 12px; padding: 40px 0 48px; color: var(--tenue); font-size: 13px; flex-wrap: wrap; }
-@media (max-width: 760px) { .cierre { grid-template-columns: 1fr; } .firmas { grid-template-columns: 1fr; } }
+.btn-p { background: var(--oscuro); color: var(--fondo); }
+.btn-l { background: transparent; color: inherit; box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 30%, transparent); }
+@media (hover: hover) and (pointer: fine) { .btn-a:hover { background: color-mix(in srgb, var(--acento) 86%, #000); } .btn-p:hover { background: color-mix(in srgb, var(--oscuro) 85%, var(--acento)); } }
 
-@media print {
-  @page { size: letter; margin: 14mm; }
-  body { background: #fff; font-size: 12.5px; }
-  .rev { opacity: 1 !important; transform: none !important; }
-  .portada { min-height: auto; page-break-after: always; }
-  section, section.cont { padding-top: 26px; }
-  .pantalla, .paq, .calc, .tabla-env, .cierre { page-break-inside: avoid; }
-  .no-print, .iva { display: none !important; }
-  .card, .marco, .tel { box-shadow: none !important; }
-  .card { border: 1px solid var(--linea); }
-  .paq.top { transform: none; }
-  .anillos circle { animation: none; stroke-dashoffset: 0; }
-  .cierre, .resultado, .paq.top { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-}
+/* cabecera numerada */
+.sec-cab { display: grid; grid-template-columns: auto 1fr; gap: clamp(16px, 3vw, 40px); align-items: start; }
+.sec-cab .n { font: italic 400 clamp(56px, 8vw, 110px)/.8 var(--f-titulo); color: var(--acento); letter-spacing: -.04em; padding-top: 4px; }
+@media (max-width: 640px) { .sec-cab { grid-template-columns: 1fr; gap: 6px; } }
+
+/* índice lateral */
+.indice { position: fixed; left: 22px; top: 50%; transform: translateY(-50%); z-index: 40; display: grid; gap: 6px; opacity: 0; pointer-events: none; transition: opacity .5s var(--ease); }
+.indice.on { opacity: 1; pointer-events: auto; }
+.indice a { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 500 12px var(--f-texto); color: var(--tenue); letter-spacing: .06em; }
+.indice a i { width: 18px; height: 1px; background: currentColor; transition: width .4s var(--ease), background-color .3s var(--ease); }
+.indice a span { opacity: 0; transform: translateX(-6px); transition: opacity .3s var(--ease), transform .3s var(--ease); white-space: nowrap; }
+.indice a.on { color: var(--acento-texto); } .indice a.on i { width: 34px; background: var(--acento); }
+.indice:hover a span, .indice a.on span { opacity: 1; transform: none; }
+@media (max-width: 1320px) { .indice { display: none; } }
 
 /* barra fija */
 .barra-top { position: fixed; top: 0; left: 0; right: 0; z-index: 50; transform: translateY(-105%); transition: transform .45s var(--ease); background: color-mix(in srgb, var(--fondo) 84%, transparent); backdrop-filter: blur(18px) saturate(1.6); -webkit-backdrop-filter: blur(18px) saturate(1.6); border-bottom: 1px solid var(--linea); }
 .barra-top.on { transform: none; }
-.barra-in { max-width: 1120px; margin: 0 auto; padding: 8px var(--gutter); display: flex; align-items: center; gap: 12px; min-height: 58px; }
+.barra-in { max-width: 1160px; margin: 0 auto; padding: 8px var(--gutter); display: flex; align-items: center; gap: 12px; min-height: 60px; }
+.firma-m { width: 46px; height: 38px; object-fit: contain; mix-blend-mode: multiply; }
 .barra-in .firma-m { width: 34px; height: 28px; }
-.barra-in > b { font: 600 14px var(--f-texto); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-.barra-in nav { display: flex; gap: 2px; margin-left: auto; }
-.barra-in nav a { padding: 8px 12px; border-radius: 999px; font-size: 14px; font-weight: 600; color: var(--tinta2); text-decoration: none; white-space: nowrap; transition: background-color .2s var(--ease), color .2s var(--ease); }
+.barra-in > b { font: 400 18px var(--f-titulo); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.barra-in nav { display: flex; gap: 2px; margin-left: auto; align-items: center; }
+.barra-in nav a { padding: 8px 12px; border-radius: 999px; font-size: 14px; font-weight: 500; color: var(--tinta2); text-decoration: none; white-space: nowrap; transition: background-color .2s var(--ease), color .2s var(--ease); }
 .barra-in nav a.on { background: var(--tarjeta); color: var(--tinta); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
 .barra-in nav a.siempre { background: var(--oscuro); color: var(--fondo); }
+.pal-punto { width: 24px; height: 24px; border-radius: 50%; border: 0; cursor: pointer; background: conic-gradient(var(--acento) 0 33%, var(--t1) 0 66%, var(--t2) 0); box-shadow: 0 0 0 2px var(--fondo), 0 0 0 3px var(--linea); flex: none; }
 .progreso { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--acento); transform-origin: left; transform: scaleX(0); }
-.btn-ic { width: 40px; height: 40px; border-radius: 50%; border: 0; display: grid; place-items: center; background: color-mix(in srgb, var(--tinta) 6%, transparent); color: var(--tinta); cursor: pointer; flex: none; transition: transform .16s var(--ease), background-color .2s var(--ease); }
-.btn-ic:active { transform: scale(.94); }
-.btn-ic svg { width: 18px; height: 18px; }
-@media (max-width: 900px) { .barra-in nav a:not(.siempre) { display: none; } }
-@media (max-width: 560px) { .firma-top .fecha { display: none; } }
-@media (hover: hover) and (pointer: fine) { .barra-in nav a:not(.siempre):hover { color: var(--tinta); } }
-.aviso { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translate(-50%, 16px); opacity: 0; background: var(--oscuro); color: var(--fondo); padding: 12px 20px; border-radius: 999px; font-weight: 600; font-size: 14.5px; transition: opacity .25s var(--ease), transform .35s var(--ease); z-index: 60; pointer-events: none; box-shadow: 0 12px 30px rgba(0,0,0,.2); }
+.btn-ic { width: 40px; height: 40px; border-radius: 50%; border: 0; display: grid; place-items: center; background: color-mix(in srgb, var(--tinta) 6%, transparent); color: var(--tinta); cursor: pointer; flex: none; transition: transform .16s var(--ease); }
+.btn-ic:active { transform: scale(.94); } .btn-ic svg { width: 18px; height: 18px; }
+@media (max-width: 960px) { .barra-in nav a:not(.siempre) { display: none; } }
+.aviso { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translate(-50%, 16px); opacity: 0; background: var(--oscuro); color: var(--fondo); padding: 12px 20px; border-radius: 999px; font-weight: 500; font-size: 14.5px; transition: opacity .25s var(--ease), transform .35s var(--ease); z-index: 60; pointer-events: none; box-shadow: 0 12px 30px rgba(0,0,0,.2); }
 .aviso.on { opacity: 1; transform: translate(-50%, 0); }
 
-/* abanico de muestras */
+/* portada */
+.portada { position: relative; overflow: hidden; }
+.portada::before { content: ""; position: absolute; inset: 0; background: radial-gradient(40% 50% at 82% 30%, var(--t1), transparent 70%), radial-gradient(35% 45% at 70% 85%, var(--t2), transparent 70%), radial-gradient(30% 40% at 8% 10%, var(--t3), transparent 70%); }
+.portada-in { position: relative; min-height: 100vh; min-height: 100svh; display: grid; grid-template-rows: auto 1fr auto; padding: 26px var(--gutter) 32px; max-width: 1160px; margin: 0 auto; }
+.firma-top { display: flex; align-items: center; gap: 12px; }
+.firma-top b { display: block; font: 500 15px/1.15 var(--f-texto); letter-spacing: .02em; }
+.firma-top small { display: block; font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--tenue); }
+.firma-top .fecha { margin-left: auto; text-align: right; }
+.portada-c { display: grid; grid-template-columns: 1.08fr .92fr; gap: 44px; align-items: center; padding: 40px 0; }
+.portada h1 { font-size: clamp(44px, 6.2vw, 84px); letter-spacing: -.03em; line-height: 1.02; }
+.portada-pie { display: flex; gap: 12px 28px; flex-wrap: wrap; align-items: center; color: var(--tinta2); font-size: 14px; border-top: 1px solid var(--linea); padding-top: 18px; }
+.portada-pie b { color: var(--tinta); }
+.bajar { display: inline-flex; align-items: center; gap: 10px; margin-top: 28px; font-size: 14px; color: var(--tenue); text-decoration: none; }
+.bajar i { width: 1px; height: 34px; background: linear-gradient(var(--acento), transparent); animation: bajar 2.2s var(--ease) infinite; transform-origin: top; }
+@keyframes bajar { 0% { transform: scaleY(0); } 60% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+@media (max-width: 860px) { .portada-c { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .firma-top .fecha { display: none; } }
+
+/* abanico */
 .abanico { display: grid; gap: 14px; justify-items: center; }
 .abanico svg { width: 100%; max-width: 520px; height: auto; overflow: visible; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 .punta { cursor: pointer; outline: none; }
@@ -217,61 +120,232 @@ details p { color: var(--tinta2); margin-top: 10px; max-width: 46em; }
 .tono:active { transform: scale(.88); }
 .tono.on { box-shadow: 0 0 0 2px var(--fondo), 0 0 0 4px var(--tinta); }
 .acabados { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: 520px; }
-.acab { border: 0; padding: 7px 11px; border-radius: 999px; background: color-mix(in srgb, var(--tinta) 6%, transparent); font: 600 13px var(--f-texto); color: var(--tinta2); cursor: pointer; transition: background-color .2s var(--ease), color .2s var(--ease), transform .16s var(--ease); }
+.acab { border: 0; padding: 7px 12px; border-radius: 999px; background: color-mix(in srgb, var(--tinta) 6%, transparent); font: 500 13px var(--f-texto); color: var(--tinta2); cursor: pointer; transition: background-color .2s var(--ease), color .2s var(--ease), transform .16s var(--ease); }
 .acab.on { background: var(--oscuro); color: var(--fondo); }
 .acab:active { transform: scale(.96); }
 .abanico-tx { font-size: 13.5px; color: var(--tenue); text-align: center; min-height: 22px; display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; }
 .abanico-tx b { color: var(--tinta); }
-.abanico-tx button { border: 0; background: none; color: var(--acento-texto); font: 700 13px var(--f-texto); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.abanico-tx button { border: 0; background: none; color: var(--acento-texto); font: 600 13px var(--f-texto); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 
-/* demo en vivo */
-.demo-vivo { display: grid; grid-template-columns: .95fr 1.05fr; gap: clamp(24px, 4vw, 56px); align-items: center; margin-top: 30px; }
-.demo-tabs { display: grid; gap: 10px; }
-.demo-tab { display: flex; align-items: center; gap: 14px; text-align: left; padding: 14px 16px; border-radius: 18px; border: 0; background: var(--tarjeta); box-shadow: var(--sombra); cursor: pointer; font: inherit; color: inherit; transition: box-shadow .2s var(--ease), transform .16s var(--ease); }
-.demo-tab.on { box-shadow: 0 0 0 2px var(--tinta), var(--sombra); }
-.demo-tab:active { transform: scale(.98); }
-.demo-tab b { display: block; } .demo-tab small { color: var(--tenue); font-size: 13px; }
-.demo-tab .n { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--acento-suave); color: var(--acento-texto); font: 600 16px var(--f-titulo); flex: none; }
-.demo-tab.on .n { background: var(--oscuro); color: var(--fondo); }
-.iphone { justify-self: center; width: 336px; height: 700px; border-radius: 54px; padding: 11px; background: linear-gradient(145deg, #2b2b2b, #0d0d0d); box-shadow: 0 0 0 1.5px #3a3a3a, 0 40px 90px rgba(0,0,0,.32); position: relative; }
-.iphone .scr { height: 100%; border-radius: 44px; overflow: hidden; display: flex; flex-direction: column; background: var(--fondo); }
-.iphone .status { height: 46px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 6px 26px 0 30px; font: 700 14px var(--f-texto); color: var(--tinta); position: relative; }
-.iphone .isla { position: absolute; top: 10px; left: 50%; width: 92px; height: 27px; border-radius: 20px; background: #000; transform: translateX(-50%); }
-.iphone .st-ic { display: flex; gap: 5px; align-items: center; } .iphone .st-ic svg { height: 11px; width: auto; fill: currentColor; }
-.iphone iframe { width: 100%; flex: 1; border: 0; background: var(--fondo); display: block; }
-.link-demo { display: inline-flex; gap: 6px; margin-top: 16px; font-weight: 700; color: var(--acento-texto); text-decoration: none; font-size: 15px; }
-@media (max-width: 860px) { .demo-vivo { grid-template-columns: 1fr; } .iphone { width: min(336px, 86vw); height: min(700px, 178vw); } }
+/* frase */
+.frase { min-height: 92vh; display: grid; place-items: center; text-align: center; }
+.frase p.serif { font-size: clamp(40px, 6.6vw, 98px); line-height: 1.04; letter-spacing: -.03em; max-width: 15em; margin: 0 auto; }
+.frase .pal { display: inline-block; opacity: .14; transition: opacity .6s var(--ease); }
+.frase .pal.on { opacity: 1; }
+.frase small { display: block; margin-top: 34px; font-size: 16px; color: var(--tinta2); }
+
+/* problema */
+.dolores { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 14px; margin-top: 48px; }
+.dolor { padding: 28px 26px; border-radius: var(--r); background: var(--tarjeta); box-shadow: var(--sombra); }
+.dolor span { display: inline-grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; font: italic 400 20px var(--f-titulo); color: var(--acento-texto); }
+.dolor:nth-child(1) span { background: var(--t1); } .dolor:nth-child(2) span { background: var(--t2); } .dolor:nth-child(3) span { background: var(--t3); } .dolor:nth-child(4) span { background: var(--t4); }
+.dolor h3 { margin: 16px 0 8px; font-size: 25px; }
+
+/* pantallas con aparatos */
+.bloque { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(28px, 5vw, 72px); align-items: center; margin-top: clamp(48px, 7vw, 90px); padding: clamp(28px, 4vw, 56px); border-radius: 40px; }
+.bloque.inv { grid-template-columns: 1.1fr .9fr; } .bloque.inv .pt { order: 2; }
+.bloque.t1 { background: var(--t1); } .bloque.t2 { background: var(--t2); } .bloque.t3 { background: var(--t3); } .bloque.t4 { background: var(--t4); }
+.pt h3 { font-size: clamp(28px, 3.2vw, 42px); margin-top: 14px; }
+.pt p { color: var(--tinta2); margin-top: 12px; }
+.pt ul { list-style: none; padding: 0; margin: 20px 0 0; display: grid; gap: 10px; }
+.pt li { position: relative; padding-left: 28px; color: var(--tinta2); }
+.pt li::before { content: ""; position: absolute; left: 2px; top: .5em; width: 14px; height: 8px; border-left: 2px solid var(--acento-texto); border-bottom: 2px solid var(--acento-texto); transform: rotate(-45deg); }
+.pt .chip { background: rgba(255,255,255,.7); }
+@media (max-width: 880px) { .bloque, .bloque.inv { grid-template-columns: 1fr; } .bloque.inv .pt { order: 0; } }
+.dev-mac { max-width: 640px; margin: 0 auto; }
+.dev-mac .pant { border: 11px solid #151515; border-bottom-width: 16px; border-radius: 18px 18px 6px 6px; background: #151515; overflow: hidden; box-shadow: 0 30px 70px rgba(40,26,20,.22); }
+.dev-mac .pant img { width: 100%; border-radius: 6px; }
+.dev-mac .base { height: 14px; width: 114%; margin-left: -7%; background: linear-gradient(#DADADF, #A9A9B0); border-radius: 0 0 14px 14px; position: relative; }
+.dev-mac .base::before { content: ""; position: absolute; left: 50%; top: 0; width: 16%; height: 5px; transform: translateX(-50%); background: #9C9CA3; border-radius: 0 0 8px 8px; }
+.dev-ipad { border: 14px solid #151515; border-radius: 30px; background: #151515; overflow: hidden; box-shadow: 0 30px 70px rgba(40,26,20,.24), inset 0 0 0 1px #333; max-width: 680px; margin: 0 auto; }
+.dev-ipad img { width: 100%; border-radius: 12px; }
+.dev-iph { width: min(250px, 42vw); border: 9px solid #151515; border-radius: 40px; background: #151515; overflow: hidden; box-shadow: 0 30px 60px rgba(40,26,20,.26); position: relative; }
+.dev-iph::before { content: ""; position: absolute; top: 7px; left: 50%; width: 30%; height: 18px; border-radius: 12px; background: #000; transform: translateX(-50%); z-index: 2; }
+.dev-iph .scr { background: var(--fondo); padding-top: 30px; border-radius: 31px; overflow: hidden; }
+.dev-iph img { width: 100%; }
+.pareja { display: flex; gap: 18px; justify-content: center; align-items: flex-start; }
+.pareja .dev-iph:nth-child(2) { margin-top: 50px; }
+.dev-tv { max-width: 660px; margin: 0 auto; }
+.dev-tv .marco { border: 9px solid #111; border-radius: 10px; background: #111; box-shadow: 0 40px 80px rgba(40,26,20,.28); }
+.dev-tv .marco img { width: 100%; }
+.dev-tv .pie { width: 26%; height: 22px; margin: 0 auto; background: linear-gradient(#bbb, #888); clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%); }
+
+/* tus colores */
+.colores { display: grid; grid-template-columns: 1.1fr .9fr; gap: 28px; margin-top: 44px; align-items: start; }
+.paletas { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.paleta { border: 0; cursor: pointer; text-align: left; padding: 14px; border-radius: 20px; background: rgba(255,255,255,.75); box-shadow: 0 1px 2px rgba(0,0,0,.04); font: inherit; color: var(--tinta); transition: transform .2s var(--ease), box-shadow .2s var(--ease); }
+.paleta:active { transform: scale(.97); }
+.paleta.on { box-shadow: 0 0 0 2px var(--tinta), 0 10px 26px rgba(40,26,20,.1); }
+.paleta .cols { display: flex; margin-bottom: 10px; }
+.paleta .cols i { width: 30px; height: 30px; border-radius: 50%; margin-right: -8px; box-shadow: 0 0 0 2px #fff; }
+.paleta b { display: block; font-size: 14.5px; } .paleta small { color: var(--tenue); font-size: 12px; }
+.editor { margin-top: 6px; display: grid; gap: 12px; }
+.editor-f { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.campo-color { display: grid; gap: 8px; justify-items: start; padding: 12px; border-radius: 16px; background: rgba(255,255,255,.75); font-size: 13px; font-weight: 500; color: var(--tinta2); cursor: pointer; position: relative; }
+.campo-color i { width: 40px; height: 40px; border-radius: 12px; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+.campo-color input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+.muestra { border-radius: 34px; padding: 22px; background: var(--fondo); box-shadow: 0 30px 70px rgba(40,26,20,.16); display: grid; gap: 14px; transition: background-color .5s var(--ease); }
+.muestra .mh { display: flex; align-items: center; gap: 10px; }
+.muestra .mh b { font: 400 20px var(--f-titulo); }
+.muestra .pase { border-radius: 22px; overflow: hidden; background: var(--tarjeta); box-shadow: var(--sombra); }
+.muestra .pase-c { padding: 14px 18px; background: var(--oscuro); color: var(--fondo); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; display: flex; justify-content: space-between; }
+.muestra .pase-b { padding: 16px 18px; display: grid; gap: 6px; }
+.muestra .pase-b small { color: var(--acento-texto); font-weight: 600; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
+.muestra .pase-b strong { font: 400 40px/1 var(--f-titulo); }
+.muestra .sellos { display: flex; gap: 6px; padding: 0 18px 18px; }
+.muestra .sellos i { width: 26px; height: 26px; border-radius: 50%; background: var(--acento); }
+.muestra .sellos i.no { background: transparent; box-shadow: inset 0 0 0 1.5px var(--acento); }
+.muestra .fila { display: flex; gap: 8px; flex-wrap: wrap; }
+@media (max-width: 880px) { .colores { grid-template-columns: 1fr; } }
+
+/* demo en vivo: tablet + teléfono */
+.vivo-pasos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 40px; }
+.paso-b { display: flex; gap: 12px; align-items: flex-start; text-align: left; padding: 16px; border-radius: 20px; border: 0; background: rgba(255,255,255,.7); cursor: pointer; font: inherit; color: var(--tinta); transition: box-shadow .2s var(--ease), transform .16s var(--ease), background-color .2s var(--ease); }
+.paso-b:active { transform: scale(.98); }
+.paso-b.on { background: var(--tarjeta); box-shadow: 0 0 0 2px var(--tinta), var(--sombra); }
+.paso-b .n { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--acento-suave); color: var(--acento-texto); font: italic 400 16px var(--f-titulo); flex: none; }
+.paso-b.on .n { background: var(--oscuro); color: var(--fondo); }
+.paso-b b { display: block; font-size: 14.5px; line-height: 1.3; } .paso-b small { color: var(--tenue); font-size: 12.5px; }
+.vivo-pista { margin-top: 16px; font-size: 15px; color: var(--tinta2); min-height: 24px; text-align: center; }
+.vivo-pista b { color: var(--tinta); }
+.escena { position: relative; display: grid; grid-template-columns: 1fr auto; gap: clamp(18px, 3vw, 44px); align-items: end; margin-top: 30px; }
+.tablet { position: relative; border: 16px solid #141414; border-radius: 34px; background: #141414; box-shadow: 0 40px 90px rgba(40,26,20,.26), inset 0 0 0 1px #2c2c2c; }
+.tablet .pant, .telefono .pant { position: relative; overflow: hidden; background: var(--fondo); }
+.tablet .pant { border-radius: 16px; }
+.tablet iframe, .telefono iframe { border: 0; transform-origin: 0 0; display: block; background: var(--fondo); position: absolute; left: 0; top: 0; }
+.telefono .pant iframe { top: 34px; }
+.tablet { min-width: 0; } .tablet .pant { width: 100%; }
+.telefono { position: relative; width: clamp(220px, 22vw, 290px); border: 10px solid #141414; border-radius: 46px; background: #141414; box-shadow: 0 40px 80px rgba(40,26,20,.3); margin-bottom: -18px; z-index: 2; }
+.telefono .pant { border-radius: 36px; }
+.telefono .status { height: 34px; display: flex; align-items: center; justify-content: space-between; padding: 4px 22px 0 26px; font: 600 12px var(--f-texto); color: var(--tinta); background: var(--fondo); position: relative; }
+.telefono .isla { position: absolute; top: 7px; left: 50%; width: 30%; height: 22px; border-radius: 14px; background: #000; transform: translateX(-50%); }
+.cable { position: absolute; left: 66%; right: 18%; top: 40%; height: 2px; pointer-events: none; z-index: 1; background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--acento) 70%, transparent) 0 8px, transparent 8px 16px); }
+.cable i { position: absolute; top: -4px; left: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--acento); box-shadow: 0 0 0 6px color-mix(in srgb, var(--acento) 25%, transparent); animation: cable 2.6s var(--ease) infinite; }
+@keyframes cable { 0% { left: 0; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { left: 100%; opacity: 0; } }
+.cable.pulso i { animation-duration: .9s; }
+.en-vivo { position: absolute; left: 50%; top: -16px; transform: translateX(-50%); z-index: 4; display: inline-flex; gap: 8px; align-items: center; padding: 6px 14px; border-radius: 999px; background: var(--tarjeta); box-shadow: var(--sombra); font-size: 12px; font-weight: 600; color: #3F7D5C; }
+.en-vivo::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #3F7D5C; animation: late 1.6s var(--ease) infinite; }
+@keyframes late { 50% { opacity: .3; } }
+.noti { position: absolute; left: 50%; top: 12px; z-index: 5; width: min(92%, 380px); transform: translate(-50%, -20px); opacity: 0; transition: opacity .4s var(--ease), transform .5s var(--ease); display: flex; gap: 10px; align-items: center; padding: 12px 14px; border-radius: 18px; background: rgba(255,255,255,.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 14px 34px rgba(0,0,0,.18); pointer-events: none; color: #1d1d1f; }
+.noti.on { opacity: 1; transform: translate(-50%, 0); }
+.noti .ic { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--acento); color: var(--acento-sobre); font: italic 400 16px var(--f-titulo); flex: none; }
+.noti b { display: block; font-size: 13.5px; } .noti small { display: block; font-size: 12.5px; color: #555; }
+.telefono .noti { top: 40px; width: 92%; }
+.link-demo { display: inline-flex; gap: 6px; margin-top: 44px; font-weight: 600; color: var(--acento-texto); text-decoration: none; font-size: 15px; }
+@media (max-width: 880px) { .vivo-pasos { grid-template-columns: 1fr 1fr; } .escena { grid-template-columns: 1fr; justify-items: center; } .telefono { width: min(280px, 76vw); margin-bottom: 0; } .cable { display: none; } .tablet { width: 100%; } }
+
+/* comparativa */
+.tabla-env { margin-top: 40px; background: var(--tarjeta); border-radius: var(--r); box-shadow: var(--sombra); overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 640px; }
+th, td { padding: 16px 18px; text-align: left; border-bottom: 1px solid var(--linea); vertical-align: top; }
+thead th { font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--tenue); font-weight: 500; }
+th.nos, td.nos { background: var(--t1); font-weight: 600; color: var(--tinta); }
+tbody th { font-weight: 500; color: var(--tinta2); }
+.si { color: #3F7D5C; font-weight: 600; } .no { color: #B23A3A; }
+.nota { font-size: 12.5px; color: var(--tenue); margin-top: 12px; }
+
+/* calculadora */
+.calc { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px; }
+.calc .card { display: grid; gap: 22px; align-content: start; }
+.rango label { display: flex; justify-content: space-between; font-weight: 500; font-size: 15px; margin-bottom: 8px; }
+.rango output { font: italic 400 24px var(--f-titulo); color: var(--acento-texto); }
+input[type=range] { width: 100%; accent-color: var(--acento-texto); height: 28px; }
+.resultado { background: var(--oscuro); color: var(--fondo); }
+.resultado .grande { font: 400 clamp(48px, 6vw, 72px)/1 var(--f-titulo); letter-spacing: -.02em; }
+.resultado .tenue { color: color-mix(in srgb, var(--fondo) 66%, transparent); }
+.res-fila { display: flex; justify-content: space-between; gap: 12px; padding: 11px 0; border-top: 1px solid rgba(255,255,255,.12); font-size: 15px; }
+.res-fila b { font-variant-numeric: tabular-nums; }
+@media (max-width: 760px) { .calc { grid-template-columns: 1fr; } }
+
+/* inversión */
+.combo { margin-top: 40px; display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; align-items: center; background: linear-gradient(120deg, var(--t1), var(--t2) 60%, var(--t4)); box-shadow: none; padding: clamp(24px, 4vw, 44px); }
+.reco-l { display: inline-block; background: var(--oscuro); color: var(--fondo); font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; padding: 6px 13px; border-radius: 999px; }
+.combo-p { text-align: right; } .combo-p s { margin-left: 6px; color: var(--tenue); }
+.paquetes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 26px; align-items: stretch; }
+.paquetes.dos { grid-template-columns: repeat(2, 1fr); }
+.paq { display: flex; flex-direction: column; gap: 14px; position: relative; }
+.paq.top { box-shadow: 0 0 0 2px var(--acento), 0 30px 70px rgba(40,26,20,.14); }
+.paq .reco { position: absolute; top: -13px; left: 24px; background: var(--acento); color: var(--acento-sobre); font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; }
+.paq h3 { font-size: 30px; }
+.precio b { font: 400 46px/1 var(--f-titulo); letter-spacing: -.02em; }
+.precio small { font-size: 14px; }
+.activ { font-size: 14px; color: var(--tenue); }
+.paq ul { list-style: none; padding: 0; margin: 4px 0 0; display: grid; gap: 9px; font-size: 14.5px; }
+.paq li { position: relative; padding-left: 24px; color: var(--tinta2); }
+.paq li::before { content: ""; position: absolute; left: 2px; top: .5em; width: 11px; height: 6px; border-left: 2px solid var(--acento-texto); border-bottom: 2px solid var(--acento-texto); transform: rotate(-45deg); }
+.paq li.mas { font-weight: 600; color: var(--tinta); padding-left: 0; } .paq li.mas::before { display: none; }
+.paq.extra:nth-child(1) { background: var(--t3); box-shadow: none; } .paq.extra:nth-child(2) { background: var(--t2); box-shadow: none; }
+.compra { margin-top: 18px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; }
+@media (max-width: 900px) { .paquetes, .paquetes.dos { grid-template-columns: 1fr; } .combo, .compra { grid-template-columns: 1fr; } .combo-p { text-align: left; } }
 
 /* arma tu plan */
-.plan { display: grid; grid-template-columns: 1.15fr .85fr; gap: 20px; margin-top: 28px; align-items: start; }
+.plan { display: grid; grid-template-columns: 1.15fr .85fr; gap: 20px; margin-top: 40px; align-items: start; }
 .plan-op { display: grid; gap: 12px; }
-.op { display: flex; align-items: center; gap: 14px; padding: 16px 18px; background: var(--tarjeta); border-radius: 18px; box-shadow: var(--sombra); }
+.op { display: flex; align-items: center; gap: 14px; padding: 16px 18px; background: rgba(255,255,255,.8); border-radius: 18px; cursor: pointer; }
 .op .tx { flex: 1; min-width: 0; } .op b { display: block; } .op small { color: var(--tenue); font-size: 13px; display: block; }
-.op .precio-op { font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; text-align: right; font-size: 14px; }
-.op .precio-op small { font-weight: 600; }
+.op .precio-op { font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; text-align: right; font-size: 14px; }
 .sw { position: relative; width: 50px; height: 30px; flex: none; }
 .sw input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; width: 100%; height: 100%; }
 .sw span { position: absolute; inset: 0; border-radius: 99px; background: color-mix(in srgb, var(--tinta) 16%, transparent); transition: background-color .25s var(--ease); pointer-events: none; }
 .sw span::after { content: ""; position: absolute; top: 2px; left: 2px; width: 26px; height: 26px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.2); transition: transform .25s var(--ease); }
-.sw input:checked + span { background: #3F7D5C; }
-.sw input:checked + span::after { transform: translateX(20px); }
-.sw input:disabled { cursor: default; } .sw input:disabled + span { opacity: .6; }
-.sw input:focus-visible + span { outline: 2px solid var(--acento); outline-offset: 2px; }
-.segp { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 4px; border-radius: 16px; background: color-mix(in srgb, var(--tinta) 7%, transparent); }
-.segp button { border: 0; background: transparent; padding: 10px 6px; border-radius: 12px; font: 700 15px var(--f-texto); color: var(--tinta2); cursor: pointer; transition: background-color .2s var(--ease), color .2s var(--ease), transform .16s var(--ease); }
-.segp button small { display: block; font-weight: 600; font-size: 12px; color: var(--tenue); margin-top: 2px; }
+.sw input:checked + span { background: #3F7D5C; } .sw input:checked + span::after { transform: translateX(20px); }
+.sw input:disabled + span { opacity: .6; } .sw input:focus-visible + span { outline: 2px solid var(--acento); outline-offset: 2px; }
+.segp { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 4px; border-radius: 16px; background: rgba(255,255,255,.55); }
+.segp button { border: 0; background: transparent; padding: 11px 6px; border-radius: 12px; font: 600 15px var(--f-texto); color: var(--tinta2); cursor: pointer; transition: background-color .2s var(--ease), color .2s var(--ease), transform .16s var(--ease); }
+.segp button small { display: block; font-weight: 500; font-size: 12px; color: var(--tenue); margin-top: 2px; }
 .segp button.on { background: var(--tarjeta); color: var(--tinta); box-shadow: 0 1px 3px rgba(0,0,0,.1); }
 .segp button:active { transform: scale(.97); }
-.total { position: sticky; top: 78px; background: var(--oscuro); color: var(--fondo); display: grid; gap: 4px; }
+.total { position: sticky; top: 80px; background: var(--oscuro); color: var(--fondo); display: grid; gap: 4px; }
 .total .tenue { color: color-mix(in srgb, var(--fondo) 66%, transparent); }
-.total .grande { font: 500 clamp(42px, 5vw, 58px)/1.05 var(--f-titulo); letter-spacing: -.02em; font-variant-numeric: lining-nums tabular-nums; }
-.total .lin { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; padding: 7px 0; border-top: 1px solid rgba(255,255,255,.12); }
+.total .grande { font: 400 clamp(46px, 5vw, 62px)/1.05 var(--f-titulo); letter-spacing: -.02em; }
+.total .lin { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; padding: 8px 0; border-top: 1px solid rgba(255,255,255,.12); }
 .total .lin b { font-variant-numeric: tabular-nums; white-space: nowrap; }
-.total .acciones { display: grid; gap: 8px; margin-top: 14px; }
-.total .btn { min-height: 50px; }
-.btn-l { box-shadow: inset 0 0 0 1px rgba(255,255,255,.3); color: var(--fondo); background: transparent; border: 0; cursor: pointer; font: 700 15px var(--f-texto); }
+.total .acciones { display: grid; gap: 8px; margin-top: 16px; }
 @media (max-width: 860px) { .plan { grid-template-columns: 1fr; } .total { position: static; } }
-@media print { .barra-top, .aviso, .tonos, .acabados, .abanico-tx, #pruebalo, .total .acciones { display: none !important; } }
+
+/* arranque y dudas */
+.g2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 16px; margin-top: 18px; }
+.lista-l { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 10px; }
+.lista-l li { display: flex; justify-content: space-between; gap: 14px; border-bottom: 1px solid var(--linea); padding-bottom: 10px; color: var(--tinta2); }
+.lista-l li b { color: var(--tinta); white-space: nowrap; }
+.linea-t { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 40px; }
+.hito { padding: 26px; border-radius: var(--r); }
+.hito:nth-child(1) { background: var(--t1); } .hito:nth-child(2) { background: var(--t2); } .hito:nth-child(3) { background: var(--t3); }
+.hito small { font: italic 400 18px var(--f-titulo); color: var(--acento-texto); }
+.hito b { display: block; font: 400 26px/1.15 var(--f-titulo); margin: 6px 0 8px; }
+.hito p { color: var(--tinta2); font-size: 15px; }
+@media (max-width: 760px) { .linea-t { grid-template-columns: 1fr; } }
+details { border-bottom: 1px solid var(--linea); padding: 22px 0; }
+summary { cursor: pointer; font: 400 23px/1.3 var(--f-titulo); list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; font: 300 28px var(--f-texto); color: var(--acento-texto); transition: transform .25s var(--ease); }
+details[open] summary::after { transform: rotate(45deg); }
+details p { color: var(--tinta2); margin-top: 10px; max-width: 46em; }
+
+/* cierre */
+.cierre { text-align: center; }
+.cierre h2 { font-size: clamp(56px, 9vw, 130px); }
+.cierre .lead { margin: 18px auto 0; color: color-mix(in srgb, var(--fondo) 75%, transparent); }
+.cierre .acc { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 36px; }
+.cierre .btn-l { color: var(--fondo); }
+.firma { margin: 70px auto 0; display: grid; justify-items: center; gap: 6px; }
+.firma .firma-m { width: 90px; height: 74px; mix-blend-mode: normal; filter: invert(1); opacity: .9; }
+.firma b { font: italic 400 28px var(--f-titulo); }
+.firma small { color: color-mix(in srgb, var(--fondo) 60%, transparent); letter-spacing: .2em; text-transform: uppercase; font-size: 11px; }
+.firmas { display: none; }
+.pie { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 26px 0 34px; color: var(--tenue); font-size: 13px; flex-wrap: wrap; text-align: center; }
+
+@media print {
+  @page { size: letter; margin: 14mm; }
+  body { background: #fff; font-size: 12.5px; }
+  .rev { opacity: 1 !important; transform: none !important; }
+  .barra-top, .indice, .aviso, .tonos, .acabados, .abanico-tx, #pruebalo, #colores, .total .acciones, .bajar { display: none !important; }
+  .sec { padding: 26px 0; page-break-inside: avoid; }
+  .portada-in { min-height: auto; } .frase { min-height: auto; }
+  .card, .dev-mac .pant, .dev-ipad, .dev-iph, .dev-tv .marco { box-shadow: none !important; }
+  .firmas { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px; } .firmas div { border-top: 1px solid currentColor; padding-top: 8px; font-size: 12px; }
+  .sec, .resultado, .total, .combo, .hito, .bloque { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
 </style>
 </head>
 <body>
@@ -286,8 +360,10 @@ const Q = n => "Q" + Math.round(n).toLocaleString("en-US");
 const hoy = new Date(), vence = new Date(hoy.getTime() + 15 * 864e5);
 const MES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 const fecha = d => d.getDate() + " de " + MES[d.getMonth()] + " de " + d.getFullYear();
+const $ = id => document.getElementById(id);
 document.title = "Propuesta · " + (P.generico ? "Sistema para salones de belleza" : M.nombre);
 
+/* ---------- paquetes ---------- */
 const PAQ = [
   { id: "esencial", nombre: "Esencial", activ: 2500, mes: 750, desc: "Para empezar a recibir citas en línea sin perder ninguna.", items: ["Página del salón con servicios y precios", "Reserva en línea las 24 horas", "Pase de cita con QR: confirmar, mover o cancelar", "Recordatorio de mañana por WhatsApp con un toque", "Agenda del día por estilista", "Ficha de clientas con historial", "Hasta 4 personas en el equipo", "Tarjeta de puntos: se agrega aparte"] },
   { id: "boutique", nombre: "Boutique", activ: 6500, mes: 1500, desc: "Todo el salón en un solo lugar. Lo que viste en la demo.", items: ["<b>Todo lo de Esencial, y además:</b>", "Estudio de diseño de uñas conectado a la cita", "Recepción en vivo: llegadas, espera, en servicio y por cobrar", "Cobro con propina, efectivo con cambio, transferencia y link", "Caja diaria con cuadre", "Ficha de belleza: fórmulas de color, pestañas, antes y después, firma", "Comisiones y pago del equipo", "Inventario que se descuenta solo", "Paquetes, membresías, tarjetas de regalo y puntos", "Reportes y exportar a Excel", "Pantalla para la TV de la sala", "Tarjeta de puntos web incluida", "Hasta 10 personas en el equipo"] },
@@ -300,27 +376,74 @@ const EXTRA = [
 const COMBO = { activ: 3200, mes: 850 };
 let IVA = false;
 const conIva = n => IVA ? n * 1.12 : n;
-
+function paquetesHTML() {
+  return PAQ.map(p => { p.top = p.id === (P.recomendado || "boutique"); return p; }).map(p => `<div class="card paq ${p.top ? "top" : ""}">${p.top ? `<span class="reco">${P.generico ? "Recomendado" : "Para empezar"}</span>` : ""}
+    <h3>${p.nombre}</h3><p class="tx2 small">${p.desc}</p>
+    <div class="precio"><small class="tenue">${p.desde ? "desde " : ""}</small><b>${Q(conIva(p.mes))}</b><small class="tenue"> / mes</small></div>
+    <div class="activ">Activación única: <b style="color:var(--tinta)">${p.desde ? "desde " : ""}${Q(conIva(p.activ))}</b></div>
+    <ul>${p.items.map(x => `<li class="${x.startsWith("<b>") ? "mas" : ""}">${x}</li>`).join("")}</ul></div>`).join("");
+}
 function extrasHTML() {
-  return EXTRA.map(x => `<div class="card paq extra"><span class="chip">Nuevo</span><h3>${x.nombre}</h3>
-    <div class="precio"><b>${Q(conIva(x.mes))}</b><small class="tenue"> / mes</small></div><div class="activ tenue">Activación única: <b style="color:inherit">${Q(conIva(x.activ))}</b></div>
+  return EXTRA.map(x => `<div class="card paq extra"><span class="chip" style="align-self:flex-start;background:rgba(255,255,255,.75)">Nuevo</span><h3>${x.nombre}</h3>
+    <div class="precio"><b>${Q(conIva(x.mes))}</b><small class="tenue"> / mes</small></div><div class="activ">Activación única: <b style="color:var(--tinta)">${Q(conIva(x.activ))}</b></div>
     <ul>${x.items.map(i => `<li>${i}</li>`).join("")}</ul><p class="nota">${x.nota}</p></div>`).join("");
 }
 function comboHTML() {
   if (P.generico) return "";
-  return `<div class="card combo"><div><span class="reco-l">Lo que recomendamos para ${esc(M.nombre)}</span><h3 style="font-size:clamp(26px,3vw,34px);margin-top:10px">Esencial + Tarjeta de puntos</h3>
-      <p class="tx2" style="margin-top:8px">Reservas en línea, recordatorios, agenda y la tarjeta de sellos para que sus clientas vuelvan. Cuando el salón crezca, se pasa a Boutique pagando solo la diferencia.</p></div>
-    <div class="combo-p"><div class="precio"><b>${Q(conIva(COMBO.mes))}</b><small class="tenue"> / mes</small></div><div class="activ tenue">Activación: <b style="color:inherit">${Q(conIva(COMBO.activ))}</b> <s>${Q(conIva(2500 + 1200))}</s></div>
+  return `<div class="card combo"><div><span class="reco-l">Lo que recomendamos para ${esc(M.nombre)}</span><h3 style="font-size:clamp(30px,3.6vw,44px);margin-top:14px">Esencial + <em>tarjeta de puntos</em></h3>
+      <p class="tx2" style="margin-top:10px">Reservas en línea, recordatorios, agenda y la tarjeta de sellos para que sus clientas vuelvan. Cuando el salón crezca, se pasa a Boutique pagando solo la diferencia.</p></div>
+    <div class="combo-p"><div class="precio"><b>${Q(conIva(COMBO.mes))}</b><small class="tenue"> / mes</small></div><div class="activ">Activación: <b style="color:var(--tinta)">${Q(conIva(COMBO.activ))}</b> <s>${Q(conIva(2500 + 1200))}</s></div>
       <p class="nota">¿Con Apple y Google Wallet? + ${Q(conIva(2800))} de activación y ${Q(conIva(300))} al mes.</p></div></div>`;
 }
+
+/* ---------- paletas pastel ---------- */
+const mezcla = (a, b, k) => { const h = x => [1, 3, 5].map(i => parseInt(x.slice(i, i + 2), 16)); const A = h(a), B = h(b); return "#" + A.map((v, i) => Math.round(v + (B[i] - v) * k).toString(16).padStart(2, "0")).join(""); };
+function paleta(nombre, fondo, acento, nude, tinta, t) {
+  return { nombre, c: { fondo, fondo2: mezcla(fondo, "#000000", .045), tarjeta: "#FFFFFF", tinta, tinta2: mezcla(tinta, fondo, .32), tenue: mezcla(tinta, fondo, .5), linea: mezcla(fondo, "#000000", .1), acento, acentoTexto: mezcla(acento, "#000000", .42), acentoSuave: mezcla(acento, "#FFFFFF", .8), acentoSobre: tinta, nude, oscuro: tinta }, t };
+}
+const PALETAS = [
+  { id: "marca", nombre: P.generico ? "Champán" : "Dorado " + (M.corto || "de la marca"), c: Object.assign({}, M.colores), t: ["#F7EEE6", "#EFEAF4", "#E9F0E8", "#FBF1E3"] },
+  Object.assign({ id: "rosa" }, paleta("Rosa empolvado", "#FCF6F6", "#D79AA8", "#F1D6DA", "#2D2125", ["#F9E6EB", "#F0E7F6", "#FCEDE3", "#F6E9EE"])),
+  Object.assign({ id: "lavanda" }, paleta("Lavanda", "#F9F7FC", "#AE9BD8", "#E3DCF2", "#25222F", ["#EEE8F8", "#E6EFF6", "#F8E9F0", "#EEF1E7"])),
+  Object.assign({ id: "menta" }, paleta("Menta", "#F5FAF7", "#89C2A5", "#D6EBDF", "#1F2A24", ["#E3F2EA", "#F2EFE0", "#E7EFF8", "#F6EAEE"])),
+  Object.assign({ id: "durazno" }, paleta("Durazno", "#FDF8F4", "#EFA889", "#F6DCCB", "#2E231E", ["#FCEBDF", "#F7E5EA", "#EDF3E5", "#F3ECF8"])),
+  Object.assign({ id: "cielo" }, paleta("Cielo", "#F6F9FD", "#92B6DF", "#DCE7F4", "#1F2632", ["#E5EFFA", "#F0EBF8", "#E8F4EF", "#FBF0E6"]))
+];
+const CLAVE_TEMA = M.clave + ".tema";
+let TEMA = { id: "marca" };
+try { TEMA = JSON.parse(localStorage.getItem(CLAVE_TEMA + ".propuesta") || "null") || TEMA; } catch (e) {}
+function temaActual() { if (TEMA.id === "propio" && TEMA.c) return TEMA; return PALETAS.find(p => p.id === TEMA.id) || PALETAS[0]; }
+function varsDe(c, t) { const v = {}; Object.entries(c).forEach(([k, x]) => v["--" + k.replace(/[A-Z]/g, y => "-" + y.toLowerCase())] = x); t.forEach((x, i) => v["--t" + (i + 1)] = x); return v; }
+function pintarVars(doc, v) { if (!doc || !doc.documentElement) return; Object.entries(v).forEach(([k, x]) => doc.documentElement.style.setProperty(k, x)); }
+function aplicarTema(guardar) {
+  const p = temaActual(), v = varsDe(p.c, p.t);
+  pintarVars(document, v);
+  document.querySelector('meta[name="theme-color"]').setAttribute("content", p.c.fondo);
+  document.querySelectorAll("iframe").forEach(f => { try { pintarVars(f.contentDocument, v); } catch (e) {} });
+  if (guardar) {
+    try {
+      localStorage.setItem(CLAVE_TEMA + ".propuesta", JSON.stringify(TEMA));
+      if (TEMA.id === "marca") localStorage.removeItem(CLAVE_TEMA); else localStorage.setItem(CLAVE_TEMA, JSON.stringify(p.c));
+    } catch (e) {}
+  }
+}
+function paletasHTML() {
+  const act = temaActual();
+  return PALETAS.map(p => `<button class="paleta ${TEMA.id === p.id ? "on" : ""}" data-pal="${p.id}"><span class="cols"><i style="background:${p.c.acento}"></i><i style="background:${p.t[0]}"></i><i style="background:${p.t[1]}"></i><i style="background:${p.c.fondo}"></i></span><b>${esc(p.nombre)}</b><small>${p.id === "marca" ? "La de su logo" : "Pastel"}</small></button>`).join("")
+    + `<button class="paleta ${TEMA.id === "propio" ? "on" : ""}" data-pal="propio"><span class="cols"><i style="background:conic-gradient(#F5A3B5,#B9A6E0,#8FC9AE,#F2C08E,#F5A3B5)"></i></span><b>A tu gusto</b><small>Escoge cada color</small></button>`
+    + `<div class="editor" style="grid-column:1/-1"><div class="editor-f">${[["acento", "Color principal"], ["fondo", "Fondo"], ["nude", "Detalle"]].map(([k, n]) => `<label class="campo-color" style="--c:${act.c[k]}"><i></i>${n}<input type="color" data-color="${k}" value="${act.c[k]}" aria-label="${n}"></label>`).join("")}</div>
+      <p class="tenue small">Se aplica en vivo a esta propuesta y a la demo: la página del salón, la reserva, la recepción y la tarjeta de puntos.</p></div>`;
+}
+
 /* ---------- abanico de muestras de uñas ---------- */
-const TONOS = [["Rosa chicle", "#EE8FB1"], ["Coral", "#EE7B66"], ["Rojo clásico", "#B3132C"], ["Vino", "#5C1A2B"], ["Lila", "#C9B6E4"], ["Nude rosado", "#E8C3B9"], ["Champán", "#D8C3A5"], ["Blanco", "#FBFBF9"], ["Negro", "#141414"], ["Azul marino", "#1F2A4D"], ["Salvia", "#9CAF95"], ["Oro", "#C9A24A"]];
+const TONOS = [["Rosa chicle", "#EE8FB1"], ["Rosa ballet", "#F4C7D1"], ["Coral", "#EE7B66"], ["Durazno", "#F6B99A"], ["Rojo clásico", "#B3132C"], ["Vino", "#5C1A2B"], ["Lila", "#C9B6E4"], ["Lavanda", "#A99BD8"], ["Menta", "#A8D8C0"], ["Cielo", "#A9C9E8"], ["Nude rosado", "#E8C3B9"], ["Champán", "#D8C3A5"], ["Blanco", "#FBFBF9"], ["Negro", "#141414"], ["Oro", "#C9A24A"]];
 const ACAB = [["brillo", "Brillo"], ["mate", "Mate"], ["glitter", "Glitter"], ["cromado", "Cromado"], ["frances", "Francés"], ["ojo", "Ojo de gato"]];
 const ANG = [-56, -37, -18.5, 0, 18.5, 37, 56];
-const UN = ["#EE8FB1", "#EE7B66", "#B3132C", "#5C1A2B", "#C9B6E4", "#E8C3B9", "#D8C3A5"].map((c, i) => ({ c, a: i === 4 ? "glitter" : i === 6 ? "frances" : "brillo" }));
+const UN = ["#F4C7D1", "#F6B99A", "#EE8FB1", "#C9B6E4", "#A8D8C0", "#A9C9E8", "#E8C3B9"].map((c, i) => ({ c, a: i === 3 ? "glitter" : i === 6 ? "frances" : i === 5 ? "cromado" : "brillo" }));
 let SEL = null;
 const angAct = ANG.map(() => 0), angObj = ANG.map(() => 0), alzAct = ANG.map(() => 0);
 const NH = 116, PUNTA = `M-30 0 L-30-58 C-30-95-11-${NH} 0-${NH} C11-${NH} 30-95 30-58 L30 0 Q0 8-30 0Z`;
+const tonoNombre = hex => (TONOS.find(t => t[1].toLowerCase() === String(hex).toLowerCase()) || ["Color a tu gusto"])[0];
 function puntaSVG(u, i) {
   let c = "";
   if (u.a === "frances") c += `<path d="M-40-80 Q0-62 40-80 L40-130 L-40-130Z" fill="#FBFBF9"/>`;
@@ -336,46 +459,38 @@ function puntaSVG(u, i) {
       <path d="${PUNTA}" fill="none" stroke="rgba(0,0,0,.14)" stroke-width="1"/>
       <path class="sel-aro" d="${PUNTA}" fill="none" stroke="var(--tinta)" stroke-width="2.4" transform="translate(0 4) scale(1.1)"/></g></g>`;
 }
-const tonoNombre = hex => (TONOS.find(t => t[1].toLowerCase() === String(hex).toLowerCase()) || ["Color a tu gusto"])[0];
 function abanicoSVG() {
   const lg = M.logoSVG ? M.logoSVG(76, false).replace("<svg ", '<svg x="-38" y="-38" ') : `<text y="9" text-anchor="middle" font-family="var(--f-titulo)" font-size="26" fill="var(--tinta)">${esc(M.monograma || "")}</text>`;
   return `<svg viewBox="-300 -352 600 410" id="abSVG" role="group" aria-label="Abanico de muestras de uñas">
     <defs>
       <linearGradient id="ab-var" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#B8963A"/><stop offset=".5" stop-color="#EAD38C"/><stop offset="1" stop-color="#A6842C"/></linearGradient>
-      <linearGradient id="ab-somb" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".32"/><stop offset=".22" stop-color="#000" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".1"/><stop offset=".78" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".32"/></linearGradient>
+      <linearGradient id="ab-somb" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".28"/><stop offset=".22" stop-color="#000" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".12"/><stop offset=".78" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient>
       <linearGradient id="ab-crom" x1="0" y1="0" x2="1" y2="1"><stop offset=".1" stop-color="#fff" stop-opacity=".1"/><stop offset=".32" stop-color="#fff" stop-opacity=".8"/><stop offset=".46" stop-color="#fff" stop-opacity=".05"/><stop offset=".66" stop-color="#fff" stop-opacity=".55"/><stop offset=".88" stop-color="#E9D9FF" stop-opacity=".2"/></linearGradient>
       <linearGradient id="ab-ojo" x1="0" y1="1" x2="1" y2="0"><stop offset=".36" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".65"/><stop offset=".62" stop-color="#fff" stop-opacity="0"/></linearGradient>
       <pattern id="ab-glit" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(23)"><circle cx="1" cy="1.5" r=".55" fill="#fff"/><circle cx="5.5" cy="2.6" r=".42" fill="#F7E3A1"/><circle cx="3.2" cy="6.4" r=".5" fill="#fff" opacity=".85"/><circle cx="7.6" cy="7.3" r=".35" fill="#E9D9FF"/><circle cx="8.1" cy="4.2" r=".3" fill="#fff" opacity=".7"/><circle cx="1.9" cy="8.4" r=".28" fill="#F7E3A1"/></pattern>
-      <filter id="ab-sombra" x="-40%" y="-20%" width="180%" height="150%"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#2A1A10" flood-opacity=".22"/></filter>
+      <filter id="ab-sombra" x="-40%" y="-20%" width="180%" height="150%"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#2A1A10" flood-opacity=".2"/></filter>
     </defs>
     <g id="abPuntas"></g>
     <circle r="50" fill="var(--tarjeta)" stroke="url(#ab-var)" stroke-width="3" filter="url(#ab-sombra)"/>${lg}
   </svg>`;
 }
 function pintarAbanico() {
-  const g = document.getElementById("abPuntas"); if (!g) return;
+  const g = $("abPuntas"); if (!g) return;
   const orden = UN.map((u, i) => i).sort((a, b) => (a === SEL) - (b === SEL));
   g.innerHTML = orden.map(i => puntaSVG(UN[i], i)).join("");
   aplicarAngulos();
-  const tx = document.getElementById("abTx");
-  tx.innerHTML = SEL === null ? `<span>Toca una uña y escoge el color. <b>Así diseñan sus clientas.</b></span>` : `<span><b>Uña ${SEL + 1}</b> · ${tonoNombre(UN[SEL].c)} · ${ACAB.find(x => x[0] === UN[SEL].a)[1]}</span><button data-todas>Todas</button>`;
+  $("abTx").innerHTML = SEL === null ? `<span>Toca una uña y escoge el color. <b>Así diseñan sus clientas.</b></span>` : `<span><b>Uña ${SEL + 1}</b> · ${tonoNombre(UN[SEL].c)} · ${ACAB.find(x => x[0] === UN[SEL].a)[1]}</span><button data-todas>Todas</button>`;
   const obj = SEL === null ? UN : [UN[SEL]];
-  document.getElementById("tonos").innerHTML = TONOS.map(([n, c]) => `<button class="tono ${obj.every(u => u.c === c) ? "on" : ""}" style="--c:${c}" data-tono="${c}" aria-label="${n}" title="${n}"></button>`).join("");
-  document.getElementById("acabados").innerHTML = ACAB.map(([k, n]) => `<button class="acab ${obj.every(u => u.a === k) ? "on" : ""}" data-acab="${k}">${n}</button>`).join("");
+  $("tonos").innerHTML = TONOS.map(([n, c]) => `<button class="tono ${obj.every(u => u.c === c) ? "on" : ""}" style="--c:${c}" data-tono="${c}" aria-label="${n}" title="${n}"></button>`).join("");
+  $("acabados").innerHTML = ACAB.map(([k, n]) => `<button class="acab ${obj.every(u => u.a === k) ? "on" : ""}" data-acab="${k}">${n}</button>`).join("");
 }
-function aplicarAngulos() {
-  document.querySelectorAll("#abPuntas .punta").forEach(el => { const i = +el.dataset.i; el.setAttribute("transform", `rotate(${angAct[i].toFixed(2)}) translate(0 ${(-alzAct[i]).toFixed(2)})`); });
-}
+function aplicarAngulos() { document.querySelectorAll("#abPuntas .punta").forEach(el => { const i = +el.dataset.i; el.setAttribute("transform", `rotate(${angAct[i].toFixed(2)}) translate(0 ${(-alzAct[i]).toFixed(2)})`); }); }
 let animando = false;
 function animarAbanico() {
   if (animando) return; animando = true;
   const paso = () => {
     let mov = false;
-    ANG.forEach((_, i) => {
-      const da = angObj[i] - angAct[i], alz = SEL === i ? 18 : 0, dz = alz - alzAct[i];
-      if (Math.abs(da) > .05 || Math.abs(dz) > .05) mov = true;
-      angAct[i] += da * .14; alzAct[i] += dz * .2;
-    });
+    ANG.forEach((_, i) => { const da = angObj[i] - angAct[i], dz = (SEL === i ? 18 : 0) - alzAct[i]; if (Math.abs(da) > .05 || Math.abs(dz) > .05) mov = true; angAct[i] += da * .14; alzAct[i] += dz * .2; });
     aplicarAngulos();
     if (mov) requestAnimationFrame(paso); else { animando = false; ANG.forEach((_, i) => { angAct[i] = angObj[i]; }); aplicarAngulos(); }
   };
@@ -385,9 +500,6 @@ function abrirAbanico() {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) { ANG.forEach((a, i) => { angAct[i] = angObj[i] = a; }); aplicarAngulos(); return; }
   ANG.forEach((a, i) => setTimeout(() => { angObj[i] = a; animarAbanico(); }, 250 + Math.abs(i - 3) * 70));
 }
-
-/* ---------- demo en vivo ---------- */
-const DEMO_TABS = [["#/", "La página del salón", "Servicios, trabajos y horario"], ["#/reservar", "Reservar una cita", "Tres pasos, sin crear cuenta"], ["#/disenar/preset/aura-rosa", "Diseñar sus uñas", "Forma, color, francés y cristales"], ["tarjeta", "Su tarjeta de puntos", "Sellos y Apple o Google Wallet"]];
 
 /* ---------- arma tu plan ---------- */
 const PL = { paq: P.recomendado || "boutique", web: !P.generico, wallet: false, dominio: false };
@@ -414,106 +526,118 @@ function planHTML() {
       <p class="tenue small">Mensualidad</p><p class="grande">${Q(r.mes)}</p>
       <p class="tenue small" style="margin-bottom:10px">Activación única: <b style="color:var(--fondo)">${Q(r.activ)}</b>${PL.paq === "signature" ? " · desde" : ""}</p>
       ${r.lin.map(l => `<div class="lin"><span>${l[0]}</span><b>${l[1] < 0 ? "−" + Q(conIva(-l[1])) : Q(conIva(l[1]))}${l[2] ? " + " + Q(conIva(l[2])) + "/mes" : ""}</b></div>`).join("")}
-      <div class="lin"><span>Primer año en total</span><b>${Q(r.activ + r.mes * 12)}</b></div>
+      <div class="lin"><span>Colores</span><b>${esc(temaActual().nombre || "A tu gusto")}</b></div>
       <div class="acciones"><a class="btn btn-a" target="_blank" rel="noopener" href="https://wa.me/${WA_FIRMA}?text=${encodeURIComponent(textoPlan(r))}">Lo quiero así</a><button class="btn btn-l" data-copiar>Copiar resumen</button></div>
     </div>`;
 }
 function textoPlan(r) {
-  return `Hola Antonio, me interesa el sistema para ${P.generico ? "mi salón" : M.nombre}:\n` + r.lin.map(l => `• ${l[0]}`).join("\n") + `\nActivación: ${Q(r.activ)} · Mensualidad: ${Q(r.mes)} (${IVA ? "con IVA" : "sin IVA"}).`;
+  return `Hola Antonio, me interesa el sistema para ${P.generico ? "mi salón" : M.nombre}:\n` + r.lin.map(l => `• ${l[0]}`).join("\n") + `\n• Colores: ${temaActual().nombre || "a mi gusto"}\nActivación: ${Q(r.activ)} · Mensualidad: ${Q(r.mes)} (${IVA ? "con IVA" : "sin IVA"}).`;
 }
+
+/* ---------- utilidades ---------- */
 function aviso(t) { let a = document.querySelector(".aviso"); if (!a) { a = document.createElement("div"); a.className = "aviso"; a.setAttribute("role", "status"); document.body.appendChild(a); } a.textContent = t; a.classList.add("on"); clearTimeout(aviso._t); aviso._t = setTimeout(() => a.classList.remove("on"), 2200); }
 async function compartir() {
   const d = { title: document.title, text: "Propuesta para " + CLIENTE, url: location.href };
   try { if (navigator.share) { await navigator.share(d); return; } await navigator.clipboard.writeText(location.href); aviso("Link copiado"); } catch (e) { if (e && e.name !== "AbortError") aviso("No se pudo compartir"); }
 }
+const ICO_COMP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="m16 6-4-4-4 4"/><path d="M12 2v13"/></svg>`;
+const mac = (src, alt) => `<div class="dev-mac"><div class="pant"><img src="propuesta/${src}.jpg" alt="${esc(alt)}" loading="lazy"></div><div class="base"></div></div>`;
+const ipad = (src, alt) => `<div class="dev-ipad"><img src="propuesta/${src}.jpg" alt="${esc(alt)}" loading="lazy"></div>`;
+const iph = (src, alt) => `<div class="dev-iph"><div class="scr"><img src="propuesta/${src}.jpg" alt="${esc(alt)}" loading="lazy"></div></div>`;
+const tv = (src, alt) => `<div class="dev-tv"><div class="marco"><img src="propuesta/${src}.jpg" alt="${esc(alt)}" loading="lazy"></div><div class="pie"></div></div>`;
+const bloque = (tono, sub, tit, txt, items, visual, inv) => `<div class="bloque ${tono} ${inv ? "inv" : ""} rev"><div class="pt"><span class="chip">${sub}</span><h3>${tit}</h3><p>${txt}</p><ul>${items.map(x => `<li>${x}</li>`).join("")}</ul></div><div>${visual}</div></div>`;
+const cab = (n, eyebrow, titulo, lead) => `<div class="sec-cab rev"><span class="n">${n}</span><div><p class="eyebrow">${eyebrow}</p><h2>${titulo}</h2>${lead ? `<p class="lead">${lead}</p>` : ""}</div></div>`;
+const SECS = [["problema", "01", "El problema"], ["solucion", "02", "La solución"], ["colores", "03", "Tus colores"], ["pruebalo", "04", "Pruébalo"], ["comparativa", "05", "Por qué propio"], ["calculadora", "06", "La cuenta"], ["paquetes", "07", "Inversión"], ["plan", "08", "Tu plan"], ["arranque", "09", "Cómo arrancamos"], ["dudas", "10", "Dudas"]];
 
-function svgAnillos() { return `<svg class="anillos" viewBox="0 0 200 200" aria-hidden="true"><circle pathLength="100" cx="100" cy="100" r="96" stroke-width=".9"/><circle pathLength="100" cx="103" cy="97" r="90" stroke-width=".6"/><circle pathLength="100" cx="97" cy="103" r="86" stroke-width=".5"/></svg>`; }
-function logoCliente() {
-  if (P.generico) return `<div class="generico">Tu salón,<br><em>tu marca.</em></div>`;
-  return M.logoSVG ? M.logoSVG(320, false) : `<div class="generico">${esc(M.nombre)}</div>`;
-}
-const marco = (src, alt) => `<div class="marco"><img src="propuesta/${src}.jpg" alt="${esc(alt)}" loading="lazy"></div>`;
-const tel = (src, alt) => `<div class="tel"><img src="propuesta/${src}.jpg" alt="${esc(alt)}" loading="lazy"></div>`;
-const pantalla = (tit, sub, txt, items, visual, inv, i) => `<div class="pantalla ${inv ? "inv" : ""} rev" style="--i:${i}"><div class="pt"><span class="chip">${sub}</span><h3 style="margin-top:12px;font-size:clamp(26px,3vw,34px)">${tit}</h3><p class="tx2" style="margin-top:10px">${txt}</p><ul>${items.map(x => `<li>${x}</li>`).join("")}</ul></div><div>${visual}</div></div>`;
-
-function paquetesHTML() {
-  return PAQ.map(p => { p.top = p.id === (P.recomendado || "boutique"); return p; }).map(p => `<div class="card paq ${p.top ? "top" : ""}">${p.top ? `<span class="reco">${P.generico ? "Recomendado" : "Para empezar"}</span>` : ""}
-    <h3>${p.nombre}</h3><p class="tx2 small">${p.desc}</p>
-    <div class="precio"><small class="tenue">${p.desde ? "desde " : ""}</small><b>${Q(conIva(p.mes))}</b><small class="tenue"> / mes</small></div>
-    <div class="activ tenue">Activación única: <b style="color:inherit">${p.desde ? "desde " : ""}${Q(conIva(p.activ))}</b></div>
-    <ul>${p.items.map(x => `<li class="${x.startsWith("<b>") ? "mas" : ""}">${x}</li>`).join("")}</ul></div>`).join("");
-}
-
-document.getElementById("raiz").innerHTML = `
+/* ---------- página ---------- */
+$("raiz").innerHTML = `
 <div class="barra-top" id="barraTop"><div class="barra-in"><img class="firma-m" src="img/firma-m.png" alt=""><b>${P.generico ? "Sistema para salones" : esc(M.nombre)}</b>
-  <nav aria-label="Secciones"><a href="#problema">Problema</a><a href="#solucion">Solución</a><a href="#pruebalo">Pruébalo</a><a href="#paquetes">Inversión</a><a href="#dudas">Dudas</a><a href="#plan" class="siempre">Tu plan</a></nav>
-  <button class="btn-ic" data-compartir aria-label="Compartir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="m16 6-4-4-4 4"/><path d="M12 2v13"/></svg></button></div><div class="progreso" id="progreso"></div></div>
-<header class="portada">
+  <nav aria-label="Secciones"><a href="#solucion">Solución</a><a href="#colores">Colores</a><a href="#pruebalo">Pruébalo</a><a href="#paquetes">Inversión</a><a href="#dudas">Dudas</a><a href="#plan" class="siempre">Tu plan</a></nav>
+  <a class="pal-punto" href="#colores" aria-label="Cambiar colores" title="Cambiar colores"></a>
+  <button class="btn-ic" data-compartir aria-label="Compartir">${ICO_COMP}</button></div><div class="progreso" id="progreso"></div></div>
+<nav class="indice" id="indice" aria-label="Índice">${SECS.map(([id, n, t]) => `<a href="#${id}"><i></i>${n}<span>${t}</span></a>`).join("")}</nav>
+
+<header class="portada"><div class="portada-in">
   <div class="firma-top"><img class="firma-m" src="img/firma-m.png" alt="M de Monterroso"><div><b>Monterroso Dev Studio</b><small>Sistemas a la medida</small></div>
     <div class="fecha small tenue">Propuesta comercial<br>${fecha(hoy)}</div></div>
   <div class="portada-c">
     <div><p class="eyebrow">${P.generico ? "Sistema para salones de belleza" : "Preparada para " + esc(M.nombre)}</p>
       <h1>Las citas, la recepción y las cuentas de ${esc(CLIENTE)}, <em>en un solo lugar.</em></h1>
-      <p class="lead">Tus clientas reservan solas desde el teléfono y hasta diseñan sus uñas antes de llegar. Recepción ve todo el día en una pantalla, y a fin de mes los números ya están hechos.</p></div>
-    <div class="abanico rev-0" id="abanico">${abanicoSVG()}<div class="abanico-tx" id="abTx"></div><div class="tonos" id="tonos"></div><div class="acabados" id="acabados"></div></div>
+      <p class="lead">Tus clientas reservan solas desde el teléfono y hasta diseñan sus uñas antes de llegar. Recepción ve todo el día en una pantalla, y a fin de mes los números ya están hechos.</p>
+      <a class="bajar" href="#frase"><i></i>Desliza para verlo</a></div>
+    <div class="abanico" id="abanico">${abanicoSVG()}<div class="abanico-tx" id="abTx"></div><div class="tonos" id="tonos"></div><div class="acabados" id="acabados"></div></div>
   </div>
   <div class="portada-pie"><span>Para <b>${esc(P.generico ? "salones de belleza" : M.nombre)}</b></span><span>${P.servicios || "Uñas · Cabello · Pestañas y cejas · Spa"}</span><span>Vigente hasta el <b>${fecha(vence)}</b></span></div>
-</header>
+</div></header>
 
 <main>
-<section class="cont" id="problema">
-  <p class="eyebrow rev">Lo que pasa hoy</p>
-  <h2 class="rev">Un salón lleno se puede seguir perdiendo dinero.</h2>
+<section class="sec t1 frase" id="frase"><div class="cont">
+  <p class="serif" id="fraseTx">${"Tus clientas no deberían tener que escribirte para saber si hay espacio.".split(" ").map(w => `<span class="pal">${w}</span>`).join(" ")}</p>
+  <small class="rev">Deberían verlo, escogerlo y llegar. <em class="serif" style="font-size:1.25em">Lo demás lo hace el sistema.</em></small>
+</div></section>
+
+<section class="sec" id="problema"><div class="cont">
+  ${cab("01", "Lo que pasa hoy", "Un salón lleno <em>también</em> puede perder dinero.")}
   <div class="dolores">
-    ${[["Citas que no llegan", "Sin anticipo y sin recordatorio, una de cada diez clientas no se presenta. Esa hora no vuelve."], ["WhatsApp todo el día", "Recepción contesta «¿tienen espacio el sábado?» veinte veces y el teléfono manda en el salón."], ["La agenda en un cuaderno", "Dos citas a la misma hora, un tinte que se encima con un corte y nadie sabe quién atiende a quién."], ["Comisiones a mano", "A fin de quincena se suman servicios, productos y propinas con calculadora. Siempre hay una diferencia."]].map(([t, d], i) => `<div class="dolor rev" style="--i:${i}"><span>0${i + 1}</span><h3>${t}</h3><p class="tx2">${d}</p></div>`).join("")}
+    ${[["Citas que no llegan", "Sin anticipo y sin recordatorio, una de cada diez clientas no se presenta. Esa hora no vuelve."], ["WhatsApp todo el día", "Recepción contesta «¿tienen espacio el sábado?» veinte veces y el teléfono manda en el salón."], ["La agenda en un cuaderno", "Dos citas a la misma hora, un tinte que se encima con un corte y nadie sabe quién atiende a quién."], ["Comisiones a mano", "A fin de quincena se suman servicios, productos y propinas con calculadora. Siempre hay una diferencia."]].map(([t, d], i) => `<div class="dolor rev" style="--i:${i}"><span>${i + 1}</span><h3>${t}</h3><p class="tx2">${d}</p></div>`).join("")}
   </div>
-</section>
+</div></section>
 
-<section class="cont" id="solucion">
-  <p class="eyebrow rev">Lo que proponemos</p>
-  <h2 class="rev">Un sistema hecho para salones, con la marca de ${esc(CLIENTE)}.</h2>
-  <p class="lead rev">No es una app de otra empresa con tu nombre pegado. Es tu página, tus colores y tus datos. Funciona en el celular, en la computadora de recepción y en la tablet.</p>
-  ${pantalla("Reservan solas, en un minuto", "Para la clienta", "Escoge servicio, estilista y hora libre en tres pasos. Recibe un pase con QR para confirmar, cambiar la hora o cancelar sin llamar.", ["Horarios libres en tiempo real, sin choques", "Anticipo en servicios largos: novias, keratina, extensiones", "Su cita al calendario del teléfono con un toque", "Tarjetas de regalo que se abren como sobre"], `<div class="telefonos">${tel("movil-reservar", "Reserva en línea")}${tel("movil-pase", "Pase de cita con QR")}</div>`, false, 0)}
-  ${pantalla("El estudio de diseño de uñas", "Lo que nadie más tiene", "La clienta escoge forma, largo, color por uña, francés, aura, mármol, cristales y perlas sobre una mano. Ve el precio al momento, y la manicurista recibe el diseño exacto con la lista de materiales.", ["12 diseños de la casa listos para personalizar", "Manos y pies, con tonos de piel", "Los tonos salen del inventario real", "Imagen para compartir por WhatsApp e Instagram"], marco("estudio", "Estudio de diseño de uñas"), true, 1)}
-  ${pantalla("Recepción en vivo", "Para recepción", "Todo el día en una pantalla: quién viene, quién espera, quién está en servicio y quién falta de pagar. Con alergias, bebida favorita y si es VIP a la vista.", ["Llegada con el QR del pase", "Clientas sin cita en dos toques: quién está libre ya", "Cobro con propina, efectivo con cambio y pago dividido", "Caja del día con cuadre"], marco("recepcion", "Recepción en vivo"), false, 2)}
-  ${pantalla("Cada estilista, su día en el teléfono", "Para el equipo", "La siguiente clienta con su ficha, el diseño de uñas en grande, la fórmula de color de la última vez y lo que lleva ganado en comisiones y propinas.", ["Ficha de belleza: color, pestañas, antes y después", "Consentimiento firmado con el dedo", "Meta del mes con su avance", "Venta de productos desde la silla"], `<div class="telefonos">${tel("movil-estilista", "Vista de la estilista")}${tel("movil-estudio", "Estudio en el teléfono")}</div>`, true, 3)}
-  ${pantalla("Su tarjeta de puntos, en la cartera del teléfono", "Nuevo · para que vuelvan", "Cada visita suma un sello y cada quetzal suma puntos. La clienta guarda su tarjeta en Apple Wallet o Google Wallet, o la abre con un link. Cuando le falta un sello, el teléfono se lo recuerda.", ["Sellos y premio que el salón decide (ej. 8 sellos = un pedicure)", "Recepción escanea el QR y el sello se suma al cobrar", "Avisos en la pantalla bloqueada", "Sin app: funciona en iPhone, Android o desde el navegador"], `<div class="telefonos">${tel("movil-tarjeta", "Tarjeta de puntos")}${tel("movil-wallet", "Vista previa de Apple Wallet")}</div>`, false, 4)}
-  ${pantalla("Los números del mes, sin calculadora", "Para la dueña", "Ventas por día, servicio, categoría y estilista, ticket promedio, clientas que regresan, faltas y horas pico. Comisiones e inventario se calculan solos.", ["Pago del equipo por quincena, listo para imprimir", "Paquetes, membresías y puntos", "Mensajes de cumpleaños y «te extrañamos» listos para enviar", "Exportar a Excel"], marco("admin-reportes", "Reportes"), true, 5)}
-  ${pantalla("Y un detalle para la sala de espera", "Experiencia", "Una TV con los turnos («Ana, te esperan en la silla 1»), el lookbook de diseños y las promociones del mes, con un QR para reservar.", ["Se ve en cualquier Smart TV con navegador", "Se actualiza sola"], marco("sala", "Pantalla de la sala de espera"), false, 6)}
-</section>
+<section class="sec f2" id="solucion"><div class="cont">
+  ${cab("02", "Lo que proponemos", `Hecho para salones, con la marca de <em>${esc(CLIENTE)}</em>.`, "No es una app de otra empresa con tu nombre pegado. Es tu página, tus colores y tus datos. Funciona en el celular, en la tablet de recepción y en la computadora.")}
+  ${bloque("t1", "Para la clienta", "Reservan solas, en un minuto", "Escoge servicio, estilista y hora libre en tres pasos. Recibe un pase con QR para confirmar, cambiar la hora o cancelar sin llamar.", ["Horarios libres en tiempo real, sin choques", "Anticipo en servicios largos: novias, keratina, extensiones", "Su cita al calendario del teléfono", "Tarjetas de regalo que se abren como sobre"], `<div class="pareja">${iph("movil-reservar", "Reserva en línea")}${iph("movil-pase", "Pase de cita con QR")}</div>`, false)}
+  ${bloque("t2", "Lo que nadie más tiene", "El estudio de diseño de uñas", "La clienta escoge forma, largo, color por uña, francés, aura, mármol, cristales y perlas. Ve el precio al momento y la manicurista recibe el diseño exacto con la lista de materiales.", ["12 diseños de la casa para empezar", "Manos y pies", "Los tonos salen del inventario real", "Imagen para compartir por WhatsApp"], mac("estudio", "Estudio de diseño de uñas"), true)}
+  ${bloque("t3", "Para recepción", "Todo el día en la tablet", "Quién viene, quién espera, quién está en servicio y quién falta de pagar. Con alergias, bebida favorita y si es VIP a la vista.", ["Llegada con el QR del pase", "Clientas sin cita en dos toques", "Cobro con propina, cambio y pago dividido", "Caja del día con cuadre"], ipad("recepcion", "Recepción en vivo"), false)}
+  ${bloque("t4", "Para el equipo", "Cada estilista, su día en el teléfono", "La siguiente clienta con su ficha, el diseño de uñas en grande, la fórmula de color de la última vez y lo que lleva ganado.", ["Ficha de belleza: color, pestañas, antes y después", "Consentimiento firmado con el dedo", "Meta del mes con su avance", "Venta de productos desde la silla"], `<div class="pareja">${iph("movil-estilista", "Vista de la estilista")}${iph("movil-estudio", "Estudio en el teléfono")}</div>`, true)}
+  ${bloque("t1", "Nuevo · para que vuelvan", "Su tarjeta de puntos, en la cartera", "Cada visita suma un sello y cada quetzal suma puntos. La clienta la guarda en Apple Wallet o Google Wallet, o la abre con un link.", ["Sellos y premio que el salón decide", "Recepción suma el sello al cobrar", "Avisos en la pantalla bloqueada", "Funciona en iPhone y Android"], `<div class="pareja">${iph("movil-tarjeta", "Tarjeta de puntos")}${iph("movil-wallet", "Apple Wallet")}</div>`, false)}
+  ${bloque("t2", "Para la dueña", "Los números del mes, sin calculadora", "Ventas por día, servicio y estilista, ticket promedio, clientas que regresan, faltas y horas pico. Comisiones e inventario se calculan solos.", ["Pago del equipo por quincena", "Paquetes, membresías y puntos", "Mensajes de cumpleaños listos para enviar", "Exportar a Excel"], mac("admin-reportes", "Reportes"), true)}
+  ${bloque("t3", "Para la sala de espera", "Un detalle en la pared", "Una TV con los turnos, los diseños de la casa y las promociones del mes, con un QR para reservar.", ["Cualquier Smart TV con navegador", "Se actualiza sola"], tv("sala", "Pantalla de la sala de espera"), false)}
+</div></section>
 
-<section class="cont" id="pruebalo">
-  <p class="eyebrow rev">Pruébalo</p>
-  <h2 class="rev">${P.generico ? "La demo, aquí mismo." : "La demo de " + esc(M.nombre) + ", aquí mismo."}</h2>
-  <p class="lead rev">No es un video: es el sistema funcionando. Toca el teléfono, reserva una cita, diseña unas uñas o abre la tarjeta de puntos.</p>
-  <div class="demo-vivo">
-    <div class="rev"><div class="demo-tabs" id="demoTabs">${DEMO_TABS.map((t, i) => `<button class="demo-tab ${i === 0 ? "on" : ""}" data-v="${t[0]}"><span class="n">${i + 1}</span><span><b>${t[1]}</b><small>${t[2]}</small></span></button>`).join("")}</div>
-      <a class="link-demo" href="index.html#/demo" target="_blank" rel="noopener">Abrir la demo completa: recepción, estilista y administración →</a></div>
-    <div class="iphone rev" style="--i:1"><div class="scr"><div class="status"><b>9:41</b><i class="isla"></i><span class="st-ic"><svg viewBox="0 0 18 12" aria-hidden="true"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg viewBox="0 0 26 12" aria-hidden="true"><rect x=".5" y=".5" width="22" height="11" rx="3" fill="none" stroke="currentColor"/><rect x="2.5" y="2.5" width="16" height="7" rx="1.5"/><rect x="23.5" y="4" width="2" height="4" rx="1"/></svg></span></div><iframe id="demoFrame" src="index.html#/" title="Demo del sistema" loading="lazy"></iframe></div></div>
+<section class="sec t2" id="colores"><div class="cont">
+  ${cab("03", "Tus colores", "Te proponemos estos tonos. <em>Cámbialos como quieras.</em>", "Toca una paleta o escoge cada color. Toda la propuesta y la demo de abajo se pintan al momento.")}
+  <div class="colores">
+    <div class="paletas rev" id="paletas">${paletasHTML()}</div>
+    <div class="muestra rev" style="--i:1" aria-hidden="true">
+      <div class="mh">${M.logoSVG ? M.logoSVG(38, false) : ""}<b>${esc(M.nombre)}</b></div>
+      <div class="pase"><div class="pase-c"><span>Pase de cita</span><span>Confirmada</span></div><div class="pase-b"><small>Hoy</small><strong>10:30 a. m.</strong><span class="tenue small">Pedicure con diseño</span></div><div class="sellos">${[1, 1, 1, 1, 1, 0, 0, 0].map(x => `<i class="${x ? "" : "no"}"></i>`).join("")}</div></div>
+      <div class="fila"><span class="chip">Confirmada</span><span class="chip" style="background:var(--t2)">Club ${esc(M.corto || "")}</span><span class="chip" style="background:var(--t3)">5 de 8 sellos</span></div>
+      <div class="fila"><span class="btn btn-p" style="min-height:44px">Reservar cita</span><span class="btn btn-a" style="min-height:44px">Diseñar uñas</span></div>
+    </div>
   </div>
-</section>
+</div></section>
 
-<section class="cont" id="comparativa">
-  <p class="eyebrow rev">Reservas en línea</p>
-  <h2 class="rev">¿Por qué propio y no una plataforma?</h2>
-  <p class="lead rev">Fresha, Vagaro y Boulevard son buenas herramientas, pero cobran en dólares y por persona o por comisión, y la clienta termina en su app, no en la de ${esc(CLIENTE)}.</p>
+<section class="sec t3" id="pruebalo"><div class="cont">
+  ${cab("04", "Pruébalo", "Reserva en el teléfono. <em>Mírala llegar a la tablet.</em>", "Son dos pantallas del mismo sistema, conectadas en vivo. Lo que haces en una aparece en la otra, en las dos direcciones.")}
+  <div class="vivo-pasos rev" id="pasos">${[["Reserva en el teléfono", "Escoge servicio y una hora de hoy"], ["Llega a la tablet", "Recepción la ve al instante"], ["Recepción toca «Llegó»", "El pase del teléfono cambia solo"], ["Su tarjeta de puntos", "Cobra en la tablet: suma el sello"]].map(([t, s], i) => `<button class="paso-b ${i === 0 ? "on" : ""}" data-paso="${i}"><span class="n">${i + 1}</span><span><b>${t}</b><small>${s}</small></span></button>`).join("")}</div>
+  <p class="vivo-pista" id="pista">Empieza en el teléfono: escoge un servicio, una hora de hoy y confirma.</p>
+  <div class="escena rev" style="--i:1">
+    <span class="en-vivo">En vivo</span>
+    <div class="tablet"><div class="pant" id="pTablet"><iframe id="fTablet" title="Tablet de recepción"></iframe><div class="noti" id="nTablet"></div></div></div>
+    <div class="telefono"><div class="pant" id="pTel"><div class="status"><b>9:41</b><i class="isla"></i><span>●●●</span></div><iframe id="fTel" title="Teléfono de la clienta"></iframe><div class="noti" id="nTel"></div></div></div>
+    <div class="cable" id="cable"><i></i></div>
+  </div>
+  <a class="link-demo" href="index.html#/demo" target="_blank" rel="noopener">Abrir la demo completa: estilista, administración y TV →</a>
+</div></section>
+
+<section class="sec" id="comparativa"><div class="cont">
+  ${cab("05", "Reservas en línea", "¿Por qué propio <em>y no una plataforma?</em>", `Fresha, Vagaro y Boulevard son buenas herramientas, pero cobran en dólares, por persona o por comisión, y la clienta termina en su app, no en la de ${esc(CLIENTE)}.`)}
   <div class="tabla-env rev"><table>
     <thead><tr><th></th><th class="nos">Sistema propio</th><th>Fresha</th><th>Vagaro</th><th>Boulevard / Mangomint</th></tr></thead>
     <tbody>
-      <tr><th>Costo mensual con 6 personas</th><td class="nos">Q1,500 fijo</td><td>Por persona y comisión por clienta nueva</td><td>≈ US$60–100 + extras</td><td>Desde ≈ US$160–175</td></tr>
+      <tr><th>Costo mensual con 6 personas</th><td class="nos">${P.generico ? "Q1,500 fijo" : "Desde Q850 fijo"}</td><td>Por persona y comisión por clienta nueva</td><td>≈ US$60–100 + extras</td><td>Desde ≈ US$160–175</td></tr>
       <tr><th>Precio en quetzales</th><td class="nos si">Sí</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
-      <tr><th>Tu página con tu marca</th><td class="nos si">Sí, completa</td><td>Perfil dentro de su app</td><td>Perfil y página básica</td><td>Sí</td></tr>
+      <tr><th>Tu página con tu marca y tus colores</th><td class="nos si">Sí, completa</td><td>Perfil dentro de su app</td><td>Perfil y página básica</td><td>Sí</td></tr>
       <tr><th>Diseñador de uñas en la cita</th><td class="nos si">Sí</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
       <tr><th>Recepción en vivo</th><td class="nos si">Sí</td><td>Básica</td><td>Básica</td><td class="si">Sí</td></tr>
       <tr><th>Datos de tus clientas</th><td class="nos si">Tuyos, descargables</td><td>En su plataforma</td><td>En su plataforma</td><td>En su plataforma</td></tr>
       <tr><th>Soporte</th><td class="nos si">Por WhatsApp, en español</td><td>Centro de ayuda</td><td>Centro de ayuda</td><td>Correo y chat</td></tr>
     </tbody></table></div>
-  <p class="nota rev">Precios públicos aproximados en dólares a octubre de 2026. Pueden cambiar y no incluyen comisiones de procesamiento de pagos.</p>
-</section>
+  <p class="nota">Precios públicos aproximados en dólares a octubre de 2026. Pueden cambiar y no incluyen comisiones de procesamiento de pagos.</p>
+</div></section>
 
-<section class="cont" id="calculadora">
-  <p class="eyebrow rev">Haz la cuenta</p>
-  <h2 class="rev">¿Cuánto cuestan las faltas?</h2>
+<section class="sec t4" id="calculadora"><div class="cont">
+  ${cab("06", "Haz la cuenta", "¿Cuánto cuestan <em>las faltas?</em>")}
   <div class="calc rev">
     <div class="card">
       <div class="rango"><label for="cFaltas">Faltas por semana <output id="oFaltas">5</output></label><input type="range" id="cFaltas" min="0" max="20" value="5"></div>
@@ -523,110 +647,118 @@ document.getElementById("raiz").innerHTML = `
     </div>
     <div class="card resultado">
       <p class="tenue small">Se pierde hoy por faltas, al mes</p>
-      <p class="grande" id="rPerdida">Q5,413</p>
-      <div class="res-fila"><span>Se recupera con el sistema (50 %)</span><b id="rRecupera">Q2,706</b></div>
-      <div class="res-fila"><span>Horas de WhatsApp que se ahorran al mes</span><b id="rHoras">22 h</b></div>
-      <div class="res-fila"><span id="rCostoN">Plan recomendado al mes</span><b id="rCosto">Q1,500</b></div>
-      <div class="res-fila"><span>El sistema se paga con</span><b id="rPaga">6 faltas evitadas</b></div>
+      <p class="grande" id="rPerdida">Q0</p>
+      <div class="res-fila"><span>Se recupera con el sistema (50 %)</span><b id="rRecupera">Q0</b></div>
+      <div class="res-fila"><span>Horas de WhatsApp que se ahorran al mes</span><b id="rHoras">0 h</b></div>
+      <div class="res-fila"><span id="rCostoN">Plan recomendado al mes</span><b id="rCosto">Q0</b></div>
+      <div class="res-fila"><span>El sistema se paga con</span><b id="rPaga"></b></div>
     </div>
   </div>
-</section>
+</div></section>
 
-<section class="cont" id="paquetes">
-  <p class="eyebrow rev">Inversión</p>
-  <h2 class="rev">Tres paquetes. Empiezas donde quieras y subes cuando quieras.</h2>
-  <div class="iva no-print rev" role="group" aria-label="IVA"><button class="on" data-iva="0">Sin IVA</button><button data-iva="1">Con IVA (12 %)</button></div>
+<section class="sec" id="paquetes"><div class="cont">
+  ${cab("07", "Inversión", "Empiezas donde quieras <em>y subes cuando quieras.</em>")}
   <div class="rev" id="comboBox">${comboHTML()}</div>
   <div class="paquetes rev" id="paquetesBox">${paquetesHTML()}</div>
-  <div class="card compra rev">
-    <div><h3>¿Prefieres comprarlo?</h3><p class="tx2" style="margin-top:6px">Pago único con el código y los datos a nombre del salón. Lleva un mantenimiento mensual que cubre alojamiento, respaldos y soporte.</p></div>
-    <div class="precio" style="text-align:right"><b id="compraP">${Q(28000)} – ${Q(35000)}</b><div class="tenue small" id="compraM">+ ${Q(600)} al mes de mantenimiento</div></div>
-  </div>
-  <p class="nota">Precios en quetzales. Si cambias de paquete, pagas solo la diferencia de activación.</p>
-  <h3 class="rev" style="margin-top:44px;font-size:clamp(26px,3vw,34px)">Nuevo: tarjeta de puntos</h3>
+  <h3 class="rev" style="margin-top:56px;font-size:clamp(30px,3.4vw,42px)">Nuevo: <em>tarjeta de puntos</em></h3>
   <p class="tx2 rev" style="margin-top:8px">Se suma a cualquier paquete.</p>
   <div class="paquetes dos rev" id="extrasBox">${extrasHTML()}</div>
   <p class="nota">Apple cobra US$99 al año por la cuenta de desarrollador que firma las tarjetas (≈ Q770, a nombre del salón). Google Wallet no tiene costo.</p>
-</section>
+  <div class="card compra rev">
+    <div><h3>¿Prefieres <em>comprarlo?</em></h3><p class="tx2" style="margin-top:6px">Pago único con el código y los datos a nombre del salón. Lleva un mantenimiento mensual que cubre alojamiento, respaldos y soporte.</p></div>
+    <div class="precio" style="text-align:right"><b id="compraP">${Q(28000)} – ${Q(35000)}</b><div class="tenue small" id="compraM">+ ${Q(600)} al mes de mantenimiento</div></div>
+  </div>
+  <p class="nota">Precios en quetzales, sin IVA salvo que lo actives en «Tu plan». Si cambias de paquete, pagas solo la diferencia de activación.</p>
+</div></section>
 
-<section class="cont" id="plan">
-  <p class="eyebrow rev">Arma tu plan</p>
-  <h2 class="rev">Escoge lo que necesitas y mira el total.</h2>
+<section class="sec t2" id="plan"><div class="cont">
+  ${cab("08", "Arma tu plan", "Escoge lo que necesitas <em>y mira el total.</em>")}
   <div class="plan rev" id="planBox"></div>
-</section>
+</div></section>
 
-<section class="cont">
+<section class="sec" id="arranque"><div class="cont">
+  ${cab("09", "Cómo arrancamos", "En dos semanas, <em>funcionando.</em>")}
+  <div class="linea-t">
+    <div class="hito rev"><small>Semana 1</small><b>Configuración</b><p>Tu marca, tus colores, servicios, precios, equipo, horarios y estaciones. Cargamos tus clientas.</p></div>
+    <div class="hito rev" style="--i:1"><small>Semana 2</small><b>Capacitación y arranque</b><p>45 minutos con recepción y 20 con el equipo. Te acompañamos los primeros días.</p></div>
+    <div class="hito rev" style="--i:2"><small>Desde ahí</small><b>Mejora continua</b><p>Ajustes por WhatsApp y una revisión de números al mes.</p></div>
+  </div>
   <div class="g2">
     <div class="card rev"><p class="eyebrow">La mensualidad incluye</p>
-      <ul class="lista-l"><li>Alojamiento y base de datos<b>Incluido</b></li><li>Respaldo diario de la información<b>Incluido</b></li><li>Soporte por WhatsApp<b>Lun – sáb</b></li><li>Cambios de precios, servicios y fotos<b>Incluido</b></li><li>Mejoras nuevas del sistema<b>Incluido</b></li><li>Capacitación inicial del equipo<b>Incluido</b></li></ul></div>
-    <div class="card rev" style="--i:1"><p class="eyebrow">Aparte, si lo quieres</p>
-      <ul class="lista-l"><li>Dominio propio (.com)<b>≈ Q85 / año</b></li><li>Configurar el dominio<b>Q250 una vez</b></li><li>Más espacio para fotos (si crece mucho)<b>≈ US$25 / mes</b></li><li>WhatsApp automático (Signature)<b>Por conversación</b></li><li>Pagos con tarjeta (Signature)<b>Comisión del banco</b></li></ul>
-      <p class="nota">El dominio se compra a nombre del salón y se le paga directo al registrador.</p></div>
-  </div>
-  <div class="g2">
-    <div class="card rev"><p class="eyebrow">Cómo arrancamos</p>
-      <div class="pasos"><div class="paso"><div><b>Semana 1 · Configuración</b><p class="tx2 small">Tu marca, servicios, precios, equipo, horarios y estaciones. Cargamos tus clientas.</p></div></div>
-        <div class="paso"><div><b>Semana 2 · Capacitación y arranque</b><p class="tx2 small">45 minutos con recepción y 20 con el equipo. Te acompañamos los primeros días.</p></div></div>
-        <div class="paso"><div><b>Desde ahí · Mejora continua</b><p class="tx2 small">Ajustes por WhatsApp y una revisión de números al mes.</p></div></div></div></div>
+      <ul class="lista-l"><li>Alojamiento y base de datos<b>Incluido</b></li><li>Respaldo diario<b>Incluido</b></li><li>Soporte por WhatsApp<b>Lun – sáb</b></li><li>Cambios de precios, colores y fotos<b>Incluido</b></li><li>Mejoras nuevas del sistema<b>Incluido</b></li><li>Capacitación inicial<b>Incluido</b></li></ul></div>
     <div class="card rev" style="--i:1"><p class="eyebrow">Condiciones</p>
-      <ul class="lista-l"><li>Activación<b>Al iniciar</b></li><li>Primera mensualidad<b>Al entregar</b></li><li>Plazo mínimo<b>3 meses</b></li><li>Para cancelar<b>Aviso de 30 días</b></li><li>Tus datos<b>Siempre tuyos</b></li></ul></div>
+      <ul class="lista-l"><li>Activación<b>Al iniciar</b></li><li>Primera mensualidad<b>Al entregar</b></li><li>Plazo mínimo<b>3 meses</b></li><li>Para cancelar<b>Aviso de 30 días</b></li><li>Dominio propio (.com)<b>≈ Q85 / año</b></li><li>Tus datos<b>Siempre tuyos</b></li></ul></div>
   </div>
-</section>
+</div></section>
 
-<section class="cont" id="dudas">
-  <p class="eyebrow rev">Dudas frecuentes</p>
-  <h2 class="rev">Lo que siempre nos preguntan</h2>
-  <div class="rev" style="margin-top:20px">
+<section class="sec f2" id="dudas"><div class="cont">
+  ${cab("10", "Dudas frecuentes", "Lo que <em>siempre</em> nos preguntan")}
+  <div class="rev" style="margin-top:28px">
     <details><summary>¿Mis clientas tienen que bajar una app?</summary><p>No. Reservan desde el navegador con su nombre y su WhatsApp, sin crear cuenta. Si quieren, lo agregan a su pantalla de inicio como una app.</p></details>
+    <details><summary>¿Puedo cambiar los colores después?</summary><p>Sí, cuando quieras. Los colores, la letra y las fotos se ajustan sin costo dentro de la mensualidad.</p></details>
     <details><summary>¿Puedo seguir recibiendo citas por WhatsApp o en persona?</summary><p>Sí. Recepción las registra en segundos y todo queda en la misma agenda que las reservas en línea, sin choques.</p></details>
-    <details><summary>¿Qué pasa si se va el internet?</summary><p>La información está en la nube con respaldo diario. Si el salón se queda sin internet, se puede seguir trabajando desde el teléfono con datos.</p></details>
-    <details><summary>¿Los datos de mis clientas están seguros?</summary><p>Sí. Cada persona entra con su PIN y ve solo lo que le toca: la estilista ve sus citas, recepción la agenda y la dueña todo. Nadie de afuera puede ver la lista de clientas.</p></details>
-    <details><summary>¿Mis clientas necesitan iPhone para la tarjeta de puntos?</summary><p>No. Se guarda en Apple Wallet (iPhone) o en Google Wallet (Android), y quien no quiera puede abrirla con su link desde cualquier teléfono.</p></details>
+    <details><summary>¿Mis clientas necesitan iPhone para la tarjeta de puntos?</summary><p>No. Se guarda en Apple Wallet (iPhone) o en Google Wallet (Android), y quien no quiera la abre con su link desde cualquier teléfono.</p></details>
+    <details><summary>¿Los datos de mis clientas están seguros?</summary><p>Sí. Cada persona entra con su PIN y ve solo lo que le toca. Nadie de afuera puede ver la lista de clientas.</p></details>
     <details><summary>¿Y si después quiero algo distinto?</summary><p>Se construye. El sistema es nuestro, así que lo adaptamos a cómo trabaja ${esc(CLIENTE)} y no al revés.</p></details>
   </div>
-</section>
+</div></section>
 
-<div class="cont">
-  <div class="cierre rev">
-    <div><p class="eyebrow" style="color:var(--acento)">Siguiente paso</p><h2 style="color:var(--fondo)">Lo vemos funcionando con ${P.generico ? "tus servicios" : "los servicios de " + esc(M.nombre)}.</h2>
-      <p class="tx2" style="margin-top:14px">En 30 minutos te mostramos la demo con tus precios y tu equipo, y resolvemos dudas.</p></div>
-    <div style="display:grid;gap:12px"><a class="btn btn-a" target="_blank" rel="noopener" href="https://wa.me/${WA_FIRMA}?text=${encodeURIComponent("Hola Antonio, vi la propuesta del sistema para " + (P.generico ? "mi salón" : M.nombre) + " y quiero agendar la demo.")}">Agendar la demo por WhatsApp</a>
-      <button class="btn btn-s" data-compartir style="border:0;cursor:pointer;font:inherit;font-weight:700">Compartir este link</button>
-      <span class="tx2 small" style="text-align:center">Antonio Monterroso · +502 3764 5139</span></div>
-  </div>
+<section class="sec osc cierre" id="cierre"><div class="cont">
+  <p class="eyebrow rev">Siguiente paso</p>
+  <h2 class="rev">Empecemos.</h2>
+  <p class="lead rev">En 30 minutos te mostramos la demo con ${P.generico ? "tus servicios y tus colores" : "los servicios y los colores de " + esc(M.nombre)}, y resolvemos dudas.</p>
+  <div class="acc rev"><a class="btn btn-a" target="_blank" rel="noopener" href="https://wa.me/${WA_FIRMA}?text=${encodeURIComponent("Hola Antonio, vi la propuesta del sistema para " + (P.generico ? "mi salón" : M.nombre) + " y quiero agendar la demo.")}">Agendar la demo por WhatsApp</a><button class="btn btn-l" data-compartir>Compartir este link</button></div>
+  <div class="firma rev"><img class="firma-m" src="img/firma-m.png" alt="M de Monterroso"><b>Antonio Monterroso</b><small>Monterroso Dev Studio · +502 3764 5139</small></div>
   <div class="firmas"><div>Acepta · ${esc(P.generico ? "Nombre del salón" : M.nombre)}</div><div>Monterroso Dev Studio</div></div>
-  <div class="pie"><img class="firma-m" src="img/firma-m.png" alt="" style="width:32px;height:28px"><span>Monterroso Dev Studio · Propuesta válida por 15 días · Precios en quetzales, sin IVA salvo indicación</span></div>
-</div>
+</div></section>
+<div class="pie">Monterroso Dev Studio · Propuesta válida por 15 días · Precios en quetzales, sin IVA salvo indicación</div>
 </main>`;
 
-/* calculadora */
-const $ = id => document.getElementById(id);
+/* ---------- arranque ---------- */
+aplicarTema(false);
 function calcular() {
   const f = +$("cFaltas").value, t = +$("cTicket").value, m = +$("cMsj").value;
   const perdida = f * t * 4.33, recupera = perdida * .5, horas = Math.round(m * 2 * 26 / 60), costo = conIva(P.generico ? 1500 : COMBO.mes);
-  $("rCostoN").textContent = P.generico ? "Paquete Boutique al mes" : "Esencial + tarjeta al mes";
   $("oFaltas").textContent = f; $("oTicket").textContent = Q(t); $("oMsj").textContent = m;
   $("rPerdida").textContent = Q(perdida); $("rRecupera").textContent = Q(recupera); $("rHoras").textContent = horas + " h"; $("rCosto").textContent = Q(costo);
+  $("rCostoN").textContent = P.generico ? "Paquete Boutique al mes" : "Esencial + tarjeta al mes";
   const n = t ? Math.ceil(costo / t) : 0; $("rPaga").textContent = n + (n === 1 ? " falta evitada" : " faltas evitadas");
 }
 ["cFaltas", "cTicket", "cMsj"].forEach(id => $(id).addEventListener("input", calcular));
-calcular();
 function refrescar() {
-  document.querySelectorAll("[data-iva]").forEach(x => x.classList.toggle("on", (x.dataset.iva === "1") === IVA));
-  $("paquetesBox").innerHTML = paquetesHTML(); $("extrasBox").innerHTML = extrasHTML(); $("comboBox").innerHTML = comboHTML(); $("compraP").textContent = Q(conIva(28000)) + " – " + Q(conIva(35000)); $("compraM").textContent = "+ " + Q(conIva(600)) + " al mes de mantenimiento"; calcular();
-  $("planBox").innerHTML = planHTML();
+  $("paquetesBox").innerHTML = paquetesHTML(); $("extrasBox").innerHTML = extrasHTML(); $("comboBox").innerHTML = comboHTML();
+  $("compraP").textContent = Q(conIva(28000)) + " – " + Q(conIva(35000)); $("compraM").textContent = "+ " + Q(conIva(600)) + " al mes de mantenimiento";
+  calcular(); $("planBox").innerHTML = planHTML();
 }
-document.querySelectorAll("[data-iva]").forEach(b => b.addEventListener("click", () => { IVA = b.dataset.iva === "1"; refrescar(); }));
-$("planBox").innerHTML = planHTML();
+refrescar();
 $("planBox").addEventListener("click", e => {
   const b = e.target.closest("[data-paq]"); if (b) { PL.paq = b.dataset.paq; $("planBox").innerHTML = planHTML(); return; }
-  if (e.target.closest("[data-copiar]")) { navigator.clipboard && navigator.clipboard.writeText(textoPlan(calcPlan())).then(() => aviso("Resumen copiado"), () => aviso("No se pudo copiar")); }
+  if (e.target.closest("[data-copiar]")) navigator.clipboard && navigator.clipboard.writeText(textoPlan(calcPlan())).then(() => aviso("Resumen copiado"), () => aviso("No se pudo copiar"));
 });
 $("planBox").addEventListener("change", e => {
   const k = e.target.dataset.op; if (!k) return;
   if (k === "iva") { IVA = e.target.checked; refrescar(); return; }
   PL[k] = e.target.checked; $("planBox").innerHTML = planHTML();
 });
+/* colores */
+$("paletas").addEventListener("click", e => {
+  const b = e.target.closest("[data-pal]"); if (!b) return;
+  if (b.dataset.pal === "propio") { const base = temaActual(); TEMA = { id: "propio", nombre: "A tu gusto", c: Object.assign({}, base.c), t: base.t.slice() }; }
+  else TEMA = { id: b.dataset.pal };
+  aplicarTema(true); $("paletas").innerHTML = paletasHTML(); $("planBox").innerHTML = planHTML(); aviso("Colores: " + temaActual().nombre);
+});
+$("paletas").addEventListener("input", e => {
+  const k = e.target.dataset.color; if (!k) return;
+  if (TEMA.id !== "propio") { const base = temaActual(); TEMA = { id: "propio", nombre: "A tu gusto", c: Object.assign({}, base.c), t: base.t.slice() }; }
+  TEMA.c[k] = e.target.value;
+  if (k === "acento") { TEMA.c.acentoTexto = mezcla(e.target.value, "#000000", .42); TEMA.c.acentoSuave = mezcla(e.target.value, "#FFFFFF", .8); TEMA.t[0] = mezcla(e.target.value, "#FFFFFF", .84); }
+  if (k === "fondo") { TEMA.c.fondo2 = mezcla(e.target.value, "#000000", .045); TEMA.c.linea = mezcla(e.target.value, "#000000", .1); }
+  if (k === "nude") TEMA.t[1] = mezcla(e.target.value, "#FFFFFF", .5);
+  e.target.closest(".campo-color").style.setProperty("--c", e.target.value);
+  aplicarTema(true);
+  document.querySelectorAll(".paleta").forEach(x => x.classList.toggle("on", x.dataset.pal === "propio"));
+});
+$("paletas").addEventListener("change", e => { if (e.target.dataset.color) $("planBox").innerHTML = planHTML(); });
 /* abanico */
 pintarAbanico(); abrirAbanico();
 $("abanico").addEventListener("click", e => {
@@ -636,33 +768,94 @@ $("abanico").addEventListener("click", e => {
   if (e.target.closest("[data-todas]")) { SEL = null; pintarAbanico(); animarAbanico(); }
 });
 $("abanico").addEventListener("keydown", e => { const p = e.target.closest(".punta"); if (p && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); p.dispatchEvent(new MouseEvent("click", { bubbles: true })); } });
-/* demo en vivo */
-$("demoTabs").addEventListener("click", e => {
-  const b = e.target.closest(".demo-tab"); if (!b) return;
-  document.querySelectorAll(".demo-tab").forEach(x => x.classList.toggle("on", x === b));
-  const f = $("demoFrame"), v = b.dataset.v;
-  try {
-    const w = f.contentWindow;
-    if (v === "tarjeta") { const d = JSON.parse(localStorage.getItem(M.clave + ".datos")); const k = d.clientas.filter(x => x.tarjeta && x.sellos >= 3).sort((a, c) => c.sellos - a.sellos)[0]; w.location.hash = "#/tarjeta/" + k.tarjeta; }
-    else w.location.hash = v;
-  } catch (err) { f.src = "index.html" + (v === "tarjeta" ? "#/" : v); }
-});
-/* compartir */
 document.addEventListener("click", e => { if (e.target.closest("[data-compartir]")) compartir(); });
-/* barra fija, avance y sección activa */
-const barra = $("barraTop"), prog = $("progreso"), portada = document.querySelector(".portada");
+
+/* ---------- tablet + teléfono en vivo ---------- */
+const VIVO = { tablet: { w: 1180, h: 820 }, tel: { w: 390, h: 800 } };
+try { sessionStorage.setItem(M.clave + ".pin.recepcion", "1"); } catch (e) {}
+function escalar() {
+  [["fTablet", "pTablet", VIVO.tablet, 0], ["fTel", "pTel", VIVO.tel, 34]].forEach(([fi, pi, d, extra]) => {
+    const f = $(fi), p = $(pi); if (!f || !p) return; const s = p.clientWidth / d.w;
+    f.style.width = d.w + "px"; f.style.height = d.h + "px"; f.style.transform = `scale(${s})`; p.style.height = (d.h * s + extra) + "px";
+  });
+}
+addEventListener("resize", escalar);
+const leer = () => { try { return JSON.parse(localStorage.getItem(M.clave + ".datos")); } catch (e) { return null; } };
+const ESTADO = { reservada: "Por confirmar", confirmada: "Confirmada", llego: "En espera", en_servicio: "En servicio", terminada: "Por cobrar", pagada: "Pagada", cancelada: "Cancelada", falta: "No vino" };
+const horaTx = t => { const d = new Date(t), h = d.getHours(); return (h % 12 || 12) + ":" + String(d.getMinutes()).padStart(2, "0") + (h < 12 ? " a. m." : " p. m."); };
+let SNAP = null, VIGILA = null, SELLOS = null;
+function noti(donde, titulo, sub) {
+  const n = $(donde === "tablet" ? "nTablet" : "nTel"); if (!n) return;
+  n.innerHTML = `<span class="ic">${esc((M.monograma || "S").slice(0, 2))}</span><span><b>${esc(titulo)}</b><small>${esc(sub)}</small></span>`;
+  n.classList.add("on"); clearTimeout(n._t); n._t = setTimeout(() => n.classList.remove("on"), 4200);
+  const c = $("cable"); c.classList.add("pulso"); clearTimeout(c._t); c._t = setTimeout(() => c.classList.remove("pulso"), 2500);
+}
+function sincronizar() {
+  const d = leer(); if (!d) return;
+  const mapa = {}; d.citas.forEach(c => mapa[c.id] = c.estado);
+  if (SNAP) d.citas.forEach(c => {
+    const k = d.clientas.find(x => x.id === c.clienta_id) || { nombre: "Clienta" };
+    if (!(c.id in SNAP)) { if (c.origen === "en_linea") { VIGILA = c.codigo; noti("tablet", "Nueva reserva en línea", `${k.nombre.split(" ")[0]} · ${new Date(c.ini).toDateString() === new Date().toDateString() ? "hoy" : "otro día"} ${horaTx(c.ini)}`); } }
+    else if (SNAP[c.id] !== c.estado && c.codigo === VIGILA) noti("tel", "Tu cita se actualizó", `${ESTADO[c.estado] || c.estado} · ${M.nombre}`);
+    else if (SNAP[c.id] !== c.estado) noti("tablet", ESTADO[c.estado] || "Actualizada", k.nombre);
+  });
+  const w = VIGILA && d.citas.find(c => c.codigo === VIGILA), kw = w && d.clientas.find(x => x.id === w.clienta_id);
+  if (kw && SELLOS !== null && (kw.sellos || 0) !== SELLOS) noti("tel", "¡Sumaste un sello!", `${kw.sellos || 0} de ${(d.config.lealtad || { sellos: 8 }).sellos} en tu tarjeta`);
+  SELLOS = kw ? (kw.sellos || 0) : null;
+  SNAP = mapa;
+}
+const canalVivo = "BroadcastChannel" in window ? new BroadcastChannel(M.clave + ".datos") : null;
+canalVivo && (canalVivo.onmessage = () => sincronizar());
+addEventListener("storage", e => { if (e.key === M.clave + ".datos") sincronizar(); });
+const PISTAS = [
+  "Empieza en el teléfono: escoge un servicio, una hora de hoy y confirma.",
+  "Mira la tablet: la reserva entra con un aviso. Si fue para hoy, aparece en «Por llegar».",
+  "Toca <b>«Llegó»</b> en la tarjeta de la clienta en la tablet. El pase del teléfono cambia solo.",
+  "Toca <b>«Empezar»</b>, luego <b>«Terminar»</b> y <b>«Cobrar»</b> en la tablet. Al cobrar, el teléfono suma el sello."
+];
+function irPaso(i) {
+  document.querySelectorAll(".paso-b").forEach(b => b.classList.toggle("on", +b.dataset.paso === i));
+  $("pista").innerHTML = PISTAS[i];
+  const tel = $("fTel"), tab = $("fTablet"), d = leer();
+  const ir = (f, h) => { try { f.contentWindow.location.hash = h; } catch (e) { f.src = "index.html" + h; } };
+  if (i === 0) ir(tel, "#/reservar");
+  if (i === 1) ir(tab, "#/recepcion");
+  if (i >= 2 && d) {
+    const h0 = new Date(); h0.setHours(0, 0, 0, 0);
+    const esHoy = x => x.ini >= +h0 && x.ini < +h0 + 864e5;
+    let c = VIGILA && d.citas.find(x => x.codigo === VIGILA && esHoy(x));
+    if (!c) c = d.citas.filter(x => esHoy(x) && ["reservada", "confirmada", "llego"].includes(x.estado)).sort((a, b) => a.ini - b.ini)[0];
+    if (c) {
+      VIGILA = c.codigo; const k = d.clientas.find(x => x.id === c.clienta_id) || { nombre: "la clienta" };
+      SELLOS = k.sellos || 0;
+      ir(tab, "#/recepcion");
+      if (i === 2) { ir(tel, "#/mi-cita/" + c.codigo); $("pista").innerHTML = `Busca a <b>${esc(k.nombre.split(" ")[0])}</b> en la tablet y toca <b>«Llegó»</b>. Su pase en el teléfono cambia solo.`; }
+      if (i === 3) ir(tel, k.tarjeta ? "#/tarjeta/" + k.tarjeta : "#/mi-cita/" + c.codigo);
+    } else $("pista").innerHTML = "No hay citas para hoy todavía: reserva una en el teléfono (paso 1) y vuelve aquí.";
+  }
+}
+$("pasos").addEventListener("click", e => { const b = e.target.closest("[data-paso]"); if (b) irPaso(+b.dataset.paso); });
+const ioVivo = new IntersectionObserver(es => { if (es.some(x => x.isIntersecting)) { ioVivo.disconnect(); $("fTablet").src = "index.html#/recepcion"; $("fTel").src = "index.html#/reservar"; escalar(); sincronizar(); } }, { rootMargin: "400px" });
+ioVivo.observe($("pruebalo"));
+["fTablet", "fTel"].forEach(id => $(id).addEventListener("load", () => { aplicarTema(false); escalar(); }));
+escalar();
+
+/* ---------- barra, índice, frase y apariciones ---------- */
+const barra = $("barraTop"), prog = $("progreso"), portada = document.querySelector(".portada"), indice = $("indice");
 function alDesplazar() {
-  const y = scrollY, h = document.documentElement.scrollHeight - innerHeight;
-  barra.classList.toggle("on", y > portada.offsetHeight * .7);
+  const y = scrollY, h = document.documentElement.scrollHeight - innerHeight, pasado = y > portada.offsetHeight * .7;
+  barra.classList.toggle("on", pasado); indice.classList.toggle("on", pasado);
   prog.style.transform = `scaleX(${h > 0 ? Math.min(1, y / h) : 0})`;
   let act = null; document.querySelectorAll("main section[id]").forEach(s => { if (s.getBoundingClientRect().top < innerHeight * .4) act = s.id; });
   barra.querySelectorAll("nav a").forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + act && !a.classList.contains("siempre")));
+  indice.querySelectorAll("a").forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + act));
+  const fr = $("fraseTx"); if (fr) { const r = fr.getBoundingClientRect(), k = Math.min(1, Math.max(0, (innerHeight * .85 - r.top) / (r.height + innerHeight * .35))); const pals = fr.querySelectorAll(".pal"); pals.forEach((p, i) => p.classList.toggle("on", i < Math.ceil(k * pals.length))); }
 }
 addEventListener("scroll", alDesplazar, { passive: true }); alDesplazar();
-/* aparecer al bajar */
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) document.querySelectorAll(".pal").forEach(p => p.classList.add("on"));
 const io = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visto"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -6% 0px" }) : null;
 document.querySelectorAll(".rev").forEach(el => io ? io.observe(el) : el.classList.add("visto"));
-window.addEventListener("beforeprint", () => document.querySelectorAll(".rev").forEach(el => el.classList.add("visto")));
+addEventListener("beforeprint", () => { document.querySelectorAll(".rev").forEach(el => el.classList.add("visto")); document.querySelectorAll(".pal").forEach(p => p.classList.add("on")); });
 </script>
 </body>
 </html>
