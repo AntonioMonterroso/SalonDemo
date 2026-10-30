@@ -434,3 +434,16 @@
 .rc-ag-fecha::first-letter { text-transform: uppercase; }
 .recibo-h small::first-letter { text-transform: uppercase; }
 .es-bar small::first-letter { text-transform: uppercase; }
+/* ---------- combos y regalos ---------- */
+.ven-listos { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr)); }
+.ven-items .row { gap: 12px; }
+.ven-paso { display: inline-flex; align-items: center; gap: 6px; flex: none; }
+.ven-paso b { min-width: 1.6em; text-align: center; font-size: 16px; }
+.ven-paso .btn-i { width: 44px; min-height: 44px; }
+.ven-tachado { text-decoration: line-through; color: var(--tenue); }
+.ven-prev { max-width: 360px; width: 100%; margin: 0 auto; }
+.ven-prev .gift-svg, .adm-listo .gift-svg { display: block; width: 100%; height: auto; border-radius: 20px; box-shadow: var(--sombra); }
+.adm-listo .gift-svg { max-width: 400px; margin: 0 auto; aspect-ratio: 340 / 214; }
+.ven-ok { display: flex; align-items: center; gap: 14px; }
+.ven-ok .listo-ic { flex: none; }
+.ven-ok b { font-size: 22px; }

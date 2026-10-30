@@ -337,7 +337,19 @@ const ultimaVisita = k => { const l = db.listar("citas", c => c.clienta_id === k
 const citasDe = k => db.listar("citas", c => c.clienta_id === k).sort((a, b) => b.ini - a.ini);
 const gastoDe = k => sum(db.listar("pagos", p => p.clienta_id === k), p => p.total);
 const membresiaDe = k => { const c = cli(k); return c.membresia ? db.obtener("membresias", c.membresia.membresia_id) : null; };
-const paquetesDe = k => db.listar("paquetes_clienta", p => p.clienta_id === k).map(p => Object.assign({}, p, { paquete: db.obtener("paquetes", p.paquete_id) })).filter(p => p.paquete && p.usadas < p.paquete.sesiones);
+/* paquetes y combos: varios servicios, cada uno con sus sesiones. Los combos vendidos guardan su copia en `combo`. */
+const paqItems = q => q.items || [{ servicio_id: q.servicio_id, cant: q.sesiones }].concat((q.extras || []).map(s => ({ servicio_id: s, cant: 1 })));
+const paqSesiones = q => sum(paqItems(q), x => x.cant);
+const paqNormal = q => sum(paqItems(q), x => (serv(x.servicio_id).precio || 0) * x.cant);
+const paqResumen = q => paqItems(q).map(x => (x.cant > 1 ? x.cant + " × " : "") + serv(x.servicio_id).nombre).join(" · ");
+const paqDe = p => p.combo || db.obtener("paquetes", p.paquete_id);
+const usosDe = p => p.usos || (q => q && q.servicio_id ? { [q.servicio_id]: p.usadas || 0 } : {})(paqDe(p));
+const paqUsadas = p => sum(Object.values(usosDe(p)), v => v);
+const paqQuedan = (p, sid) => { const it = paqItems(paqDe(p)).find(x => x.servicio_id === sid); return it ? it.cant - (usosDe(p)[sid] || 0) : 0; };
+const paqActivo = p => { const q = paqDe(p); return !!q && paqUsadas(p) < paqSesiones(q); };
+const paquetesDe = k => db.listar("paquetes_clienta", p => p.clienta_id === k).filter(paqActivo).map(p => Object.assign({}, p, { paquete: paqDe(p) }));
+const comboRegalo = cod => db.listar("paquetes_clienta").find(p => p.regalo && p.regalo.codigo === cod);
+function codigoRegalo() { let c; do { c = "GR-" + Math.random().toString(36).slice(2, 6).toUpperCase(); } while (db.listar("tarjetas_regalo").some(g => g.codigo === c) || comboRegalo(c)); return c; }
 const esmalte = id => db.obtener("esmaltes", id);
 function cumpleEn(k, dias = 0) { const c = cli(k); if (!c.cumple) return false; const [m, d] = c.cumple.split("-").map(Number); const hoy = new Date(); const f = new Date(hoy.getFullYear(), m - 1, d); const delta = Math.round((dia0(+f) - dia0()) / DIA); return delta >= 0 && delta <= dias; }
 const esCumpleMes = k => { const c = cli(k); return c.cumple && +c.cumple.split("-")[0] === new Date().getMonth() + 1; };
@@ -467,7 +479,7 @@ function registrarCobro(c, o) {
   });
   o.metodos.forEach(m => {
     if (m.metodo === "regalo") { const g = db.listar("tarjetas_regalo").find(x => x.codigo === m.ref); if (g) g.saldo = r2(Math.max(0, g.saldo - m.monto)); }
-    if (m.metodo === "paquete") { const p = db.obtener("paquetes_clienta", m.ref); if (p) p.usadas++; }
+    if (m.metodo === "paquete") { const p = db.obtener("paquetes_clienta", m.ref); if (p) { p.usos = usosDe(p); p.usos[m.sid] = (p.usos[m.sid] || 0) + 1; p.usadas = paqUsadas(p); } }
     if (m.metodo === "membresia" && pg.clienta_id) { const k = cli(pg.clienta_id); if (k.membresia) { const mes = new Date().getMonth(); k.membresia.usos[mes + ":" + m.ref] = (k.membresia.usos[mes + ":" + m.ref] || 0) + 1; } }
   });
   if (pg.clienta_id) { const k = cli(pg.clienta_id); k.puntos = (k.puntos || 0) + Math.floor(total / cfg().puntos_cada); }

@@ -74,7 +74,7 @@ VISTAS[""] = () => {
         <div><h3 class="h3">Tarjeta de regalo</h3><p class="tx2">Llega por WhatsApp, se abre con un sobre y se canjea en cualquier servicio.</p><button class="btn btn-p mt" data-a="pubRegalo">${ic("gift")}Regalar</button></div>
       </div>
       <div class="g3 mt">${db.listar("membresias").map((m, i) => `<div class="card club scroll-rev" style="--i:${i};--c:${m.color}"><span class="chip oro">${ic("crown")} Club</span><h3 class="h3">${esc(m.nombre)}</h3><p class="tx2">${esc(m.desc)}</p><p class="club-p"><b class="num">${Q(m.precio)}</b><span class="tenue"> / mes</span></p></div>`).join("")}
-        ${db.listar("paquetes").map((p, i) => `<div class="card club scroll-rev" style="--i:${i + 2}"><span class="chip">${ic("box")} Paquete</span><h3 class="h3">${esc(p.nombre)}</h3><p class="tx2">${esc(p.desc)}</p><p class="club-p"><b class="num">${Q(p.precio)}</b></p></div>`).join("")}</div>
+        ${db.listar("paquetes").map((p, i) => `<div class="card club scroll-rev" style="--i:${i + 2}"><span class="chip">${ic("box")} Paquete</span><h3 class="h3">${esc(p.nombre)}</h3><p class="tx2">${esc(p.desc || paqResumen(p))}</p><p class="club-p"><b class="num">${Q(p.precio)}</b></p></div>`).join("")}</div>
     </section>
 
     <section class="seccion" id="puntos">
@@ -111,7 +111,7 @@ DESPUES[""] = (p, cambio) => {
       const box = $("#heroMano"); if (!box || document.hidden) return;
       k = (k + 1) % LOOKBOOK.length; const l = LOOKBOOK[k];
       box.classList.add("cambia");
-      setTimeout(() => { if (!box.isConnected) return; box.innerHTML = manoSVG({ preset: l.id }, { tam: 300 }); $("#heroNombre").textContent = l.nombre; $("#heroLink").href = "#/disenar/preset/" + l.id; box.classList.remove("cambia"); }, 260);
+      setTimeout(() => { if (!box.isConnected) return; box.innerHTML = manoSVG({ preset: l.id }, { tam: 300 }); const hn = $("#heroNombre"), hl = $("#heroLink"); if (hn) hn.textContent = l.nombre; if (hl) hl.href = "#/disenar/preset/" + l.id; box.classList.remove("cambia"); }, 260);
     }, 3400);
   }
 };
@@ -128,13 +128,15 @@ A.pubEst = el => { ui.borrador.reserva = { servs: [], paso: 1, est: el.dataset.v
 function tarjetaRegaloSVG(g) {
   const t = { rosa: ["#F4D3D7", "#E7A9B3", "#5C1A2B"], oro: ["#EBD9B4", "#C8A262", "#3B2A12"], noir: ["#2B2725", "#111", "#E8D3A6"] }[g.diseno || "oro"];
   const id = "gr" + (++svgN);
-  return `<svg class="gift-svg" viewBox="0 0 340 214" role="img" aria-label="Tarjeta de regalo de ${Q(g.monto)}"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${t[0]}"/><stop offset="1" stop-color="${t[1]}"/></linearGradient>
+  return `<svg class="gift-svg" viewBox="0 0 340 214" role="img" aria-label="${g.combo ? "Regalo: " + esc(g.combo.nombre) : "Tarjeta de regalo de " + Q(g.monto)}"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${t[0]}"/><stop offset="1" stop-color="${t[1]}"/></linearGradient>
     <linearGradient id="${id}b" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
     <rect width="340" height="214" rx="20" fill="url(#${id})"/><rect class="brillo" x="-120" y="0" width="90" height="214" fill="url(#${id}b)" transform="skewX(-18)"/>
     <circle cx="300" cy="40" r="70" fill="none" stroke="${t[2]}" stroke-opacity=".18"/><circle cx="306" cy="36" r="62" fill="none" stroke="${t[2]}" stroke-opacity=".12"/>
     <text x="24" y="42" font-family="var(--f-titulo)" font-size="20" fill="${t[2]}">${esc(MARCA.nombre)}</text>
-    <text x="24" y="64" font-family="var(--f-texto)" font-size="9" letter-spacing="2.5" fill="${t[2]}" opacity=".7">TARJETA DE REGALO</text>
-    <text x="24" y="150" font-family="var(--f-titulo)" font-size="46" fill="${t[2]}">${Q(g.monto)}</text>
+    <text x="24" y="64" font-family="var(--f-texto)" font-size="9" letter-spacing="2.5" fill="${t[2]}" opacity=".7">${g.combo ? "REGALO" : "TARJETA DE REGALO"}</text>
+    ${g.combo ? (n => `<text x="24" y="136" font-family="var(--f-titulo)" font-size="${n.length > 20 ? 22 : 30}" fill="${t[2]}">${esc(n.length > 30 ? n.slice(0, 29) + "…" : n)}</text>
+    <text x="24" y="158" font-family="var(--f-texto)" font-size="10.5" fill="${t[2]}" opacity=".8">${esc((r => r.length > 52 ? r.slice(0, 51) + "…" : r)(paqResumen(g.combo)))}</text>`)(g.combo.nombre)
+    : `<text x="24" y="150" font-family="var(--f-titulo)" font-size="46" fill="${t[2]}">${Q(g.monto)}</text>`}
     <text x="24" y="186" font-family="var(--f-texto)" font-size="11" fill="${t[2]}" opacity=".8">${esc(g.para || "")}${g.de ? " · de " + esc(g.de) : ""}</text>
     <text x="316" y="186" text-anchor="end" font-family="var(--f-texto)" font-size="10" letter-spacing="1.5" fill="${t[2]}" opacity=".7">${esc(g.codigo || "")}</text></svg>`;
 }
@@ -351,7 +353,8 @@ A.pagoRechazar = el => { const l = db.listar("links_pago").find(x => x.codigo ==
 
 /* ---------- tarjeta de regalo #/regalo/COD ---------- */
 VISTAS.regalo = p => {
-  const g = db.listar("tarjetas_regalo").find(x => x.codigo === String(p[0] || "").toUpperCase());
+  const cod = String(p[0] || "").toUpperCase(), cb = comboRegalo(cod);
+  const g = db.listar("tarjetas_regalo").find(x => x.codigo === cod) || (cb && Object.assign({ combo: paqDe(cb) }, cb.regalo));
   if (!g) return `<main class="cont" style="max-width:460px">${vacio("No encontramos esta tarjeta.")}</main>`;
   const abierta = ui.regaloAbierto === g.codigo;
   return `<main class="regalo-pag ${abierta ? "abierta" : ""}">
@@ -363,7 +366,9 @@ VISTAS.regalo = p => {
     <div class="regalo-tx ${abierta ? "" : "oculto"}">
       <p class="eyebrow">Para ${esc(g.para)}</p>
       ${g.mensaje ? `<p class="regalo-msj serif">“${esc(g.mensaje)}”</p>` : ""}<p class="tenue">— ${esc(g.de)}</p>
-      <div class="card mt regalo-saldo"><div class="esp"><small class="tenue">Saldo disponible</small><b class="serif num">${Q(g.saldo)}</b>${g.pendiente ? chip("Pago pendiente", "aviso") : ""}</div><div class="qr qr-s" data-qr="${esc(g.codigo)}"></div></div>
+      ${g.combo ? `<div class="card mt regalo-saldo"><div class="esp"><small class="tenue">Tu regalo</small><b class="serif regalo-nom">${esc(g.combo.nombre)}</b>
+        <ul class="regalo-items">${paqItems(g.combo).map(it => `<li><span>${esc(serv(it.servicio_id).nombre)}</span><b class="num">${cb.clienta_id ? paqQuedan(cb, it.servicio_id) + " de " : ""}${it.cant}</b></li>`).join("")}</ul></div><div class="qr qr-s" data-qr="${esc(g.codigo)}"></div></div>`
+      : `<div class="card mt regalo-saldo"><div class="esp"><small class="tenue">Saldo disponible</small><b class="serif num">${Q(g.saldo)}</b>${g.pendiente ? chip("Pago pendiente", "aviso") : ""}</div><div class="qr qr-s" data-qr="${esc(g.codigo)}"></div></div>`}
       <a class="btn btn-p btn-g btn-b mt" href="#/reservar">Reservar con mi regalo${ic("arrow-r")}</a>
       <p class="tenue xs centro mt">Código ${g.codigo} · se canjea en recepción</p>
     </div></main>`;

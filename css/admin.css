@@ -448,3 +448,5 @@ body.sala #app { position: relative; z-index: 1; }
   .tv-turnos { position: relative; right: auto; top: auto; width: auto; margin: 24px 5vw 130px; }
   .tv-cap { max-width: 80vw; bottom: 130px; }
 }
+.adm-av-reg { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; flex: none; background: var(--acento-suave); color: var(--acento-texto); }
+.adm-av-reg .ic { width: 18px; height: 18px; }

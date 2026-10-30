@@ -396,7 +396,7 @@ ADM_V.fidelidad = () => {
   const t = tab("admFid", "membresias");
   const socias = db.listar("clientas", k => k.membresia), recurrente = sum(socias, k => (membresiaDe(k.id) || {}).precio || 0);
   const regalos = db.listar("tarjetas_regalo"), saldoReg = sum(regalos, g => g.saldo);
-  const paqAct = db.listar("paquetes_clienta", p => { const q = db.obtener("paquetes", p.paquete_id); return q && p.usadas < q.sesiones; });
+  const paqAct = db.listar("paquetes_clienta", paqActivo);
   let cuerpo = "";
   if (t === "membresias") cuerpo = `<div class="adm-sub rev"><h2>Membresías</h2><span class="esp"></span><button class="btn btn-p btn-ch" data-a="admSociaNueva">${ic("plus")}<span>Agregar socia</span></button></div>
     <div class="g2">${db.listar("membresias").map((mb, i) => { const ss = socias.filter(k => k.membresia.membresia_id === mb.id); return `<article class="card adm-mem rev" style="--i:${i + 2};--mc:${mb.color}">
@@ -406,13 +406,15 @@ ADM_V.fidelidad = () => {
       <div class="lista adm-mem-l">${ss.map(k => { const us = sum(Object.entries(k.membresia.usos || {}).filter(([kk]) => kk.startsWith(new Date().getMonth() + ":")), ([, v]) => v); return `<div class="row">${admAv(k, 30)}<span class="row-t"><b>${esc(k.nombre)}</b><small>Desde ${fechaCorta(k.membresia.desde)} · ${us} usos este mes</small></span><button class="btn btn-t btn-ch btn-i" data-a="admSociaQuitar" data-id="${k.id}" aria-label="Quitar membresía de ${esc(k.nombre)}">${ic("x")}</button></div>`; }).join("") || `<div class="row tenue small">Todavía sin socias</div>`}</div>
     </article>`; }).join("")}</div>`;
   if (t === "paquetes") cuerpo = `<div class="adm-sub rev"><h2>Paquetes</h2><span class="esp"></span><button class="btn btn-p btn-ch" data-a="admPaqVender">${ic("plus")}<span>Vender paquete</span></button></div>
-    <div class="g3">${db.listar("paquetes").map((q, i) => { const s = serv(q.servicio_id), normal = s.precio * q.sesiones + sum(q.extras || [], x => serv(x).precio); return `<article class="card adm-paq rev" style="--i:${i + 2}">
-      <span class="adm-paq-n serif">${q.sesiones}<small>${q.sesiones === 1 ? "sesión" : "sesiones"}</small></span><b>${esc(q.nombre)}</b><p class="tenue small">${esc(q.desc)}</p>
+    <div class="g3">${db.listar("paquetes").map((q, i) => { const normal = paqNormal(q), ses = paqSesiones(q); return `<article class="card adm-paq rev" style="--i:${i + 2}">
+      <span class="adm-paq-n serif">${ses}<small>${ses === 1 ? "sesión" : "sesiones"}</small></span><b>${esc(q.nombre)}</b><p class="tenue small">${esc(q.desc || paqResumen(q))}</p>
       <div class="fila"><span class="serif adm-mem-p num">${Q(q.precio)}</span>${normal > q.precio ? `<s class="tenue small num">${Q(normal)}</s>` : ""}<span class="esp"></span><span class="tenue xs">Vence en ${q.vigencia} días</span></div>
     </article>`; }).join("")}</div>
     <div class="adm-sub rev mt-l"><h2>Paquetes activos</h2></div>
-    ${paqAct.length ? `<div class="lista rev">${paqAct.map(p => { const q = db.obtener("paquetes", p.paquete_id), k = cli(p.clienta_id), vence = p.comprado + q.vigencia * DIA; return `<button class="row click" data-a="admFicha" data-id="${k.id}">${admAv(k, 34)}<span class="row-t"><b>${esc(k.nombre)}</b><small>${esc(q.nombre)} · vence ${fechaCorta(vence)}</small></span><span class="adm-sesiones">${Array.from({ length: q.sesiones }, (_, i) => `<i class="${i < p.usadas ? "us" : ""}"></i>`).join("")}</span><span class="tenue xs num">${p.usadas}/${q.sesiones}</span></button>`; }).join("")}</div>` : `<div class="card">${vacio("Nadie tiene paquetes activos.")}</div>`}`;
-  if (t === "regalos") cuerpo = `<div class="adm-sub rev"><h2>Tarjetas de regalo</h2><span class="tenue small">Saldo por canjear ${Q(saldoReg)}</span><span class="esp"></span><button class="btn btn-p btn-ch" data-a="admRegaloNuevo">${ic("gift")}<span>Nueva tarjeta</span></button></div>
+    ${paqAct.length ? `<div class="lista rev">${paqAct.map(p => { const q = paqDe(p), vence = p.comprado + q.vigencia * DIA, n = paqSesiones(q), u = paqUsadas(p);
+      if (!p.clienta_id) return `<a class="row click" href="${admLinkRegalo(p.regalo)}" target="_blank" rel="noopener"><span class="adm-av-reg">${ic("gift")}</span><span class="row-t"><b>Regalo para ${esc(p.regalo.para)}</b><small>${esc(q.nombre)} · ${esc(p.regalo.codigo)} · sin canjear</small></span>${ic("link")}</a>`;
+      const k = cli(p.clienta_id); return `<button class="row click" data-a="admFicha" data-id="${k.id}">${admAv(k, 34)}<span class="row-t"><b>${esc(k.nombre)}</b><small>${esc(q.nombre)} · vence ${fechaCorta(vence)}</small></span><span class="adm-sesiones">${Array.from({ length: n }, (_, i) => `<i class="${i < u ? "us" : ""}"></i>`).join("")}</span><span class="tenue xs num">${u}/${n}</span></button>`; }).join("")}</div>` : `<div class="card">${vacio("Nadie tiene paquetes activos.")}</div>`}`;
+  if (t === "regalos") cuerpo = `<div class="adm-sub rev"><h2>Tarjetas de regalo</h2><span class="tenue small">Saldo por canjear ${Q(saldoReg)}</span><span class="esp"></span><button class="btn btn-p btn-ch" data-a="admRegaloNuevo">${ic("gift")}<span>Vender regalo</span></button></div>
     <div class="adm-regalos">${regalos.slice().sort((a, b) => b.creado - a.creado).map((g, i) => `<article class="adm-reg rev" style="--i:${i + 2}">${admRegaloVisual(g)}
       <div class="fila"><div class="row-t"><b class="small">Saldo ${Q(g.saldo)} de ${Q(g.monto)}</b><small class="tenue">${esc(g.para)} · ${fechaCorta(g.creado)}</small></div><a class="btn btn-s btn-ch btn-i" href="${admLinkRegalo(g)}" target="_blank" rel="noopener" aria-label="Abrir tarjeta">${ic("link")}</a></div>
       <div class="barra"><i style="width:${g.monto ? g.saldo / g.monto * 100 : 0}%"></i></div></article>`).join("")}</div>`;
@@ -446,46 +448,8 @@ F.admSocia = (f, d) => {
   registrarCobro(null, { clienta_id: k.id, lineas: [{ tipo: "membresia", ref: mb.id, nombre: "Membresía " + mb.nombre, precio: mb.precio, cant: 1, estilista_id: null }], metodos: [{ metodo: d.metodo, monto: mb.precio }] });
   cerrar(); toast(`${k.nombre.split(" ")[0]} ya es socia de ${mb.nombre}`, "crown");
 };
-A.admPaqVender = () => abrir("admPaquete", {});
-MODALES.admPaquete = () => `${cab("Vender paquete", "")}
-  <form data-f="admPaquete" class="adm-mform"><div class="modal-c pila">
-    ${campo("Paquete", `<select class="inp" id="adm_pq_p" name="paq">${db.listar("paquetes").map(q => `<option value="${q.id}">${esc(q.nombre)} · ${Q(q.precio)}</option>`).join("")}</select>`)}
-    ${campo("Clienta", `<select class="inp" id="adm_pq_k" name="k" required>${db.listar("clientas").sort((a, b) => a.nombre.localeCompare(b.nombre)).map(k => `<option value="${k.id}">${esc(k.nombre)} · ${telFmt(k.tel)}</option>`).join("")}</select>`)}
-    ${campo("Forma de pago", admSelMetodo("adm_pq_mt"))}
-  </div><div class="modal-p"><button type="button" class="btn btn-s" data-a="cerrar">Cancelar</button><button class="btn btn-p">Cobrar</button></div></form>`;
-F.admPaquete = (f, d) => {
-  const q = db.obtener("paquetes", d.paq), k = cli(d.k); if (!q || !k.id) return;
-  db.d.paquetes_clienta.push({ id: uid(), clienta_id: k.id, paquete_id: q.id, usadas: 0, comprado: Date.now() });
-  registrarCobro(null, { clienta_id: k.id, lineas: [{ tipo: "paquete", ref: q.id, nombre: q.nombre, precio: q.precio, cant: 1, estilista_id: null }], metodos: [{ metodo: d.metodo, monto: q.precio }] });
-  cerrar(); toast(`${q.nombre} para ${k.nombre.split(" ")[0]}`, "box");
-};
-A.admRegaloNuevo = () => abrir("admRegalo", { diseno: "oro" });
-MODALES.admRegalo = m => `${cab("Nueva tarjeta de regalo", "")}
-  <form data-f="admRegalo" class="adm-mform"><div class="modal-c pila">
-    <div id="admRegPrev" class="adm-reg-prev">${admRegaloVisual({ diseno: m.diseno, monto: 500, para: "", de: "" })}</div>
-    <div class="seg seg-b">${[["rosa", "Rosa"], ["oro", "Oro"], ["noir", "Noir"]].map(([k, t]) => `<button type="button" class="${m.diseno === k ? "on" : ""}" data-a="admRegDis" data-v="${k}"><i class="adm-dot regalo-${k}"></i><span>${t}</span></button>`).join("")}</div>
-    <input type="hidden" name="diseno" id="adm_rg_d" value="${m.diseno}">
-    <div><p class="campo"><span>Monto</span></p><div class="fila-w">${[250, 500, 750, 1000].map(v => `<button type="button" class="chip-b" data-a="admRegMonto" data-v="${v}">${Q(v)}</button>`).join("")}</div></div>
-    ${campo("Monto (Q)", `<input class="inp num" id="adm_rg_m" name="monto" type="number" min="50" step="50" value="500" required data-i="admRegPrev">`)}
-    <div class="g2">${campo("Para", `<input class="inp" id="adm_rg_para" name="para" required data-i="admRegPrev" autocomplete="off">`)}${campo("De", `<input class="inp" id="adm_rg_de" name="de" data-i="admRegPrev" autocomplete="off">`)}</div>
-    ${campo("Mensaje", `<textarea class="inp" id="adm_rg_msj" name="mensaje" placeholder="Opcional"></textarea>`)}
-    <div class="g2">${campo("WhatsApp de quien compra", `<input class="inp" id="adm_rg_tel" name="tel" inputmode="tel" placeholder="Para mandarle el link">`)}${campo("Forma de pago", admSelMetodo("adm_rg_mt"))}</div>
-  </div><div class="modal-p"><button type="button" class="btn btn-s" data-a="cerrar">Cancelar</button><button class="btn btn-p">Cobrar y crear</button></div></form>`;
-function admRegPintar() {
-  const g = { diseno: $("#adm_rg_d").value, monto: +$("#adm_rg_m").value || 0, para: $("#adm_rg_para").value, de: $("#adm_rg_de").value };
-  $("#admRegPrev").innerHTML = admRegaloVisual(g);
-}
-I.admRegPrev = () => admRegPintar();
-A.admRegDis = el => { const m = modalTop(); m.diseno = el.dataset.v; $("#adm_rg_d").value = m.diseno; $$("[data-a=admRegDis]").forEach(b => b.classList.toggle("on", b === el)); admRegPintar(); };
-A.admRegMonto = el => { $("#adm_rg_m").value = el.dataset.v; admRegPintar(); };
-F.admRegalo = (f, d) => {
-  const monto = Math.max(50, +d.monto || 0); let codigo;
-  do { codigo = "GR-" + Math.random().toString(36).slice(2, 6).toUpperCase(); } while (db.listar("tarjetas_regalo").some(g => g.codigo === codigo));
-  const g = { id: uid(), codigo, de: d.de.trim(), para: d.para.trim(), mensaje: d.mensaje.trim(), monto, saldo: monto, diseno: d.diseno, creado: Date.now(), tel: String(d.tel || "").replace(/\D/g, "") };
-  db.d.tarjetas_regalo.push(g);
-  registrarCobro(null, { lineas: [{ tipo: "regalo", ref: codigo, nombre: "Tarjeta de regalo " + codigo, precio: monto, cant: 1, estilista_id: null }], metodos: [{ metodo: d.metodo, monto }] });
-  ui.pila.pop(); abrir("admRegaloListo", { id: g.id });
-};
+A.admPaqVender = () => abrir("vender", { modo: "combo" });
+A.admRegaloNuevo = () => abrir("vender", { modo: "monto" });
 MODALES.admRegaloListo = m => {
   const g = db.obtener("tarjetas_regalo", m.id); if (!g) return cab("Tarjeta");
   const link = admLinkRegalo(g), txt = `${g.para ? "Para " + g.para + ": " : ""}una tarjeta de regalo de ${Q(g.monto)} en ${MARCA.nombre}. ${g.mensaje ? "«" + g.mensaje + "» " : ""}Ábrela aquí: ${link}`;

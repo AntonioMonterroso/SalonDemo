@@ -52,6 +52,7 @@ VISTAS.recepcion = () => {
       <span class="esp"></span>
       <div class="rc-head-acc">
         <button class="btn btn-s btn-ch" data-a="rcCaja">${ic("cash")}<span>Caja</span></button>
+        <button class="btn btn-s btn-ch" data-a="rcVender">${ic("gift")}<span>Combos y regalos</span></button>
         <button class="btn btn-s btn-ch" data-a="rcRecordatorios">${ic("bell")}<span>Mañana</span>${manana ? `<b class="rc-badge">${manana}</b>` : ""}</button>
         <button class="btn btn-s btn-ch" data-a="rcQR">${ic("qr")}<span>Llegó por QR</span></button>
         <button class="btn btn-s btn-ch" data-a="rcWalkin">${ic("door")}<span>Sin cita</span></button>
@@ -531,6 +532,135 @@ MODALES.rcLink = m => {
     <div class="modal-p"><button class="btn btn-p" data-a="cerrar">Listo</button></div>`;
 };
 
+/* ---------- combos, paquetes y regalos: se arman y se venden aquí ---------- */
+A.rcVender = () => abrir("vender", { modo: "combo" });
+function venCombo(m) {
+  const items = m.items.filter(x => x.cant > 0), normal = sum(items, x => serv(x.servicio_id).precio * x.cant);
+  const fijo = m.precioV !== "" && m.precioV != null;
+  const precio = fijo ? Math.max(0, Math.round(+m.precioV || 0)) : Math.round(normal * (1 - m.pct / 100) / 5) * 5;
+  const auto = items.length === 1 ? `${serv(items[0].servicio_id).nombre}${items[0].cant > 1 ? " × " + items[0].cant : ""}` : "Combo " + items.map(x => serv(x.servicio_id).nombre.split(" ")[0].toLowerCase()).join(" + ");
+  return { items, normal, precio, auto, nombre: (m.nombre || "").trim() || auto };
+}
+const venTotal = (m, x) => m.modo === "combo" ? x.precio : Math.round(+m.monto || 0);
+const venGift = (m, x) => ({ diseno: m.diseno, monto: Math.round(+m.monto || 0), para: (m.rPara || "").trim() || "Para ti", de: (m.rDe || "").trim(), codigo: "", combo: m.modo === "combo" && x.items.length ? { nombre: x.nombre, items: x.items } : null });
+function venResumen(m, x) {
+  const t = venTotal(m, x), combo = m.modo === "combo";
+  return `${combo && x.normal ? `<div class="fila"><span>Por separado</span><span class="esp"></span><span class="num ${x.normal > t ? "ven-tachado" : ""}">${Q(x.normal)}</span></div>` : ""}
+    ${combo && x.normal > t ? `<div class="fila co-menos"><span>Se ahorra</span><span class="esp"></span><span class="num">${Q(x.normal - t)}</span></div>` : ""}
+    <div class="fila co-total"><span>${combo ? "Precio del combo" : "Tarjeta de regalo"}</span><span class="esp"></span><b class="num">${Q(t)}</b></div>`;
+}
+function venPintar(m) {
+  const x = venCombo(m);
+  const r = $("#venRes"); if (r) r.innerHTML = venResumen(m, x);
+  const b = $("#venBtn"); if (b) b.innerHTML = ic("check") + "Cobrar " + Q(venTotal(m, x));
+  const p = $("#venPrev"); if (p) p.innerHTML = tarjetaRegaloSVG(venGift(m, x));
+  const n = $("#venNombre"); if (n) n.placeholder = x.auto;
+}
+MODALES.vender = m => {
+  if (!m._init) { m._init = true; m.ancho = "ancho"; m.items = []; m.cat = CATEGORIAS[0].id; m.pct = 10; m.precioV = ""; m.vig = 120; m.para = m.modo === "monto" ? "regalo" : "clienta"; m.diseno = "rosa"; m.monto = 500; m.metodo = "tarjeta"; }
+  const combo = m.modo === "combo", x = venCombo(m), regalo = !combo || m.para === "regalo";
+  const k = m.clienta_id ? cli(m.clienta_id) : null, tiene = id => m.items.some(i => i.servicio_id === id);
+  const izq = combo ? `
+      ${db.listar("paquetes").length ? `<div><p class="eyebrow">Listos para vender</p><div class="ven-listos">${db.listar("paquetes").map(q => `<button class="rc-tog ${m.base === q.id ? "on" : ""}" data-a="venBase" data-id="${q.id}" aria-pressed="${m.base === q.id}"><b>${esc(q.nombre)}</b><small>${Q(q.precio)} · ${paqSesiones(q)} ${paqSesiones(q) === 1 ? "sesión" : "sesiones"}</small></button>`).join("")}</div></div>` : ""}
+      <div class="pila"><p class="eyebrow">${db.listar("paquetes").length ? "O ármalo aquí" : "Arma el combo"}</p>${seg("venCat", CATEGORIAS.map(c => [c.id, c.nombre]), m.cat, "venCat")}
+        <div class="nc-servs">${db.listar("servicios", s => s.activo && s.cat === m.cat).map(s => `<button class="rc-tog ${tiene(s.id) ? "on" : ""}" data-a="venServ" data-id="${s.id}" aria-pressed="${tiene(s.id)}"><b>${esc(s.nombre)}</b><small>${Q(s.precio)}</small></button>`).join("")}</div></div>
+      <div class="lista ven-items">${x.items.length ? x.items.map(it => { const s = serv(it.servicio_id); return `<div class="row"><span class="row-t"><b>${esc(s.nombre)}</b><small>${Q(s.precio)} c/u</small></span>
+        <span class="ven-paso"><button class="btn btn-s btn-i" data-a="venMenos" data-id="${s.id}" aria-label="Una sesión menos de ${esc(s.nombre)}">${ic(it.cant > 1 ? "minus" : "x")}</button><b class="num" aria-live="polite">${it.cant}</b><button class="btn btn-s btn-i" data-a="venMas" data-id="${s.id}" aria-label="Una sesión más de ${esc(s.nombre)}">${ic("plus")}</button></span></div>`; }).join("")
+        : `<div class="row"><span class="row-t tenue">Toca los servicios que lleva. Con + y − cambias las sesiones de cada uno.</span></div>`}</div>
+      <div><p class="eyebrow">Precio</p><div class="fila-w">${[0, 10, 15, 20].map(p => `<button class="rc-tog rc-tog-s ${m.precioV === "" && m.pct === p ? "on" : ""}" data-a="venPct" data-v="${p}"><b>${p ? "−" + p + " %" : "Sin descuento"}</b></button>`).join("")}
+        <input class="inp num co-mini" id="venPrecio" data-i="venTxt" data-k="precioV" inputmode="numeric" placeholder="Otro Q" value="${esc(m.precioV)}" aria-label="Precio exacto del combo"></div></div>
+      <div class="g2">${campo("Nombre", `<input class="inp" id="venNombre" data-i="venTxt" data-k="nombre" placeholder="${esc(x.auto)}" value="${esc(m.nombre || "")}" autocomplete="off">`)}
+        ${campo("Vence en", `<select class="inp" id="venVig" data-i="venTxt" data-k="vig" data-solo="change">${[60, 90, 120, 180, 365].map(d => `<option value="${d}" ${+m.vig === d ? "selected" : ""}>${d === 365 ? "Un año" : d + " días"}</option>`).join("")}</select>`)}</div>
+      ${m.base ? "" : `<label class="check"><input type="checkbox" data-a="venGuardar" ${m.guardar ? "checked" : ""}> Guardarlo en los paquetes del salón para venderlo otra vez</label>`}`
+    : `<div><p class="eyebrow">Monto</p><div class="fila-w">${[200, 300, 500, 1000].map(v => `<button class="rc-tog rc-tog-s ${+m.monto === v ? "on" : ""}" data-a="venMonto" data-v="${v}"><b>${Q(v)}</b></button>`).join("")}
+        <input class="inp num co-mini" id="venMontoIn" data-i="venTxt" data-k="monto" inputmode="numeric" placeholder="Otro Q" value="${[200, 300, 500, 1000].includes(+m.monto) ? "" : esc(m.monto)}" aria-label="Otro monto"></div>
+      <p class="tenue small mt">Se canjea en cualquier servicio o producto. El saldo que sobra se queda para la próxima.</p></div>`;
+  const quien = !regalo ? (k ? `<div class="nc-cli">${avCli(k, 44)}<div class="row-t"><b>${esc(k.nombre)}</b><small>${telFmt(k.tel)}</small></div><button class="btn btn-t btn-ch" data-a="ncCambiarCli">Cambiar</button></div>`
+      : `<div class="buscar">${ic("search")}<input class="inp" id="ncBuscar" data-i="ncBuscar" placeholder="Buscar por nombre o teléfono" autocomplete="off" value="${esc(m.q || "")}"></div>
+        <div id="ncRes">${resultadosCli(m.q)}</div>
+        <div class="g2">${campo("Nombre", `<input class="inp" id="venNNom" data-i="venTxt" data-k="nNombre" value="${esc(m.nNombre || "")}" autocomplete="off">`)}${campo("WhatsApp", `<input class="inp" id="venNTel" data-i="venTxt" data-k="nTel" inputmode="tel" value="${esc(m.nTel || "")}" autocomplete="off">`)}</div>`)
+    : `<div class="ven-prev" id="venPrev">${tarjetaRegaloSVG(venGift(m, x))}</div>
+      ${seg("venDis", [["rosa", "Rosa"], ["oro", "Oro"], ["noir", "Noir"]], m.diseno, "venDis")}
+      <div class="g2">${campo("Para", `<input class="inp" id="venPara" data-i="venTxt" data-k="rPara" value="${esc(m.rPara || "")}" placeholder="Quien lo recibe" autocomplete="off">`)}${campo("De", `<input class="inp" id="venDe" data-i="venTxt" data-k="rDe" value="${esc(m.rDe || "")}" placeholder="Quien lo regala" autocomplete="off">`)}</div>
+      ${campo("Mensaje", `<textarea class="inp" id="venMsj" data-i="venTxt" data-k="rMsj" rows="2" maxlength="140" placeholder="Opcional">${esc(m.rMsj || "")}</textarea>`)}
+      ${campo("WhatsApp para mandarlo", `<input class="inp" id="venTel" data-i="venTxt" data-k="rTel" inputmode="tel" value="${esc(m.rTel || "")}" placeholder="De quien lo regala o lo recibe">`)}`;
+  return `${cab("Combos y regalos", "Se cobran aquí mismo")}<div class="modal-c pila ven">
+    ${seg("venModo", [["combo", "Combo o paquete", "box"], ["monto", "Tarjeta de regalo", "gift"]], m.modo, "venModo")}
+    <div class="co">
+      <div class="co-izq pila">${izq}</div>
+      <div class="co-der pila">
+        ${combo ? seg("venPara", [["clienta", "Para una clienta"], ["regalo", "Para regalar"]], m.para, "venPara") : ""}
+        ${quien}
+        <div><p class="eyebrow">Forma de pago</p><div class="co-mets">${["efectivo", "tarjeta", "transferencia"].map(t => `<button class="rc-tog rc-tog-s ${m.metodo === t ? "on" : ""}" data-a="venMetodo" data-v="${t}">${ic(METODOS[t][1])}<b>${METODOS[t][0]}</b></button>`).join("")}</div></div>
+        <div class="co-res" id="venRes">${venResumen(m, x)}</div>
+      </div>
+    </div></div>
+  <div class="modal-p"><button class="btn btn-s" data-a="cerrar">Cancelar</button><button class="btn btn-p btn-g" id="venBtn" data-a="venCobrar">${ic("check")}Cobrar ${Q(venTotal(m, x))}</button></div>`;
+};
+I.venTxt = el => { const m = mt(); m[el.dataset.k] = el.value; venPintar(m); };
+const venCambio = m => { if (m.base && m.nombre === db.obtener("paquetes", m.base).nombre) m.nombre = ""; m.base = null; m.precioV = ""; renderModal(); };
+A.venModo = el => { const m = mt(); m.modo = el.dataset.v; if (m.modo === "monto") m.para = "regalo"; renderModal(); };
+A.venCat = el => { mt().cat = el.dataset.v; renderModal(); };
+A.venBase = el => {
+  const m = mt(), q = db.obtener("paquetes", el.dataset.id);
+  if (m.base === q.id) { m.base = null; m.items = []; m.nombre = ""; m.precioV = ""; }
+  else { m.base = q.id; m.items = paqItems(q).map(i => ({ servicio_id: i.servicio_id, cant: i.cant })); m.nombre = q.nombre; m.precioV = String(q.precio); m.vig = q.vigencia || 120; }
+  renderModal();
+};
+A.venServ = el => { const m = mt(), i = m.items.findIndex(x => x.servicio_id === el.dataset.id); if (i >= 0) m.items.splice(i, 1); else m.items.push({ servicio_id: el.dataset.id, cant: 1 }); venCambio(m); };
+A.venMas = el => { const m = mt(), it = m.items.find(x => x.servicio_id === el.dataset.id); if (it) it.cant = Math.min(20, it.cant + 1); venCambio(m); };
+A.venMenos = el => { const m = mt(), i = m.items.findIndex(x => x.servicio_id === el.dataset.id); if (i < 0) return; if (m.items[i].cant > 1) m.items[i].cant--; else m.items.splice(i, 1); venCambio(m); };
+A.venPct = el => { const m = mt(); m.pct = +el.dataset.v; m.precioV = ""; renderModal(); };
+A.venGuardar = el => { mt().guardar = el.checked; };
+A.venPara = el => { mt().para = el.dataset.v; renderModal(); };
+A.venDis = el => { mt().diseno = el.dataset.v; renderModal(); };
+A.venMonto = el => { mt().monto = +el.dataset.v; renderModal(); };
+A.venMetodo = el => { mt().metodo = el.dataset.v; renderModal(); };
+A.venCobrar = () => {
+  const m = mt(); if (!m || m.tipo !== "vender") return;
+  const combo = m.modo === "combo", x = venCombo(m), regalo = !combo || m.para === "regalo", total = venTotal(m, x);
+  if (combo && !x.items.length) return toast("Agrega al menos un servicio", "alert", "malo");
+  if (combo && total <= 0) return toast("Revisa el precio del combo", "alert", "malo");
+  if (!combo && total < 50) return toast("El monto mínimo es " + Q(50), "alert", "malo");
+  let k = m.clienta_id ? cli(m.clienta_id) : null;
+  if (!regalo && !k) {
+    if (!(m.nNombre || "").trim()) { toast("Busca a la clienta o escribe su nombre", "alert", "malo"); const b = $("#ncBuscar"); if (b) b.focus(); return; }
+    k = clientaPorTel(m.nNombre, m.nTel);
+  }
+  if (regalo && !(m.rPara || "").trim()) { toast("Escribe para quién es el regalo", "alert", "malo"); $("#venPara").focus(); return; }
+  const rg = regalo ? { codigo: codigoRegalo(), para: m.rPara.trim(), de: (m.rDe || "").trim(), mensaje: (m.rMsj || "").trim(), tel: String(m.rTel || "").replace(/\D/g, ""), diseno: m.diseno } : null;
+  if (!combo) {
+    const g = Object.assign({ id: uid(), monto: total, saldo: total, creado: Date.now() }, rg);
+    db.d.tarjetas_regalo.push(g);
+    registrarCobro(null, { lineas: [{ tipo: "regalo", ref: g.codigo, nombre: "Tarjeta de regalo " + g.codigo, precio: total, cant: 1, estilista_id: null }], metodos: [{ metodo: m.metodo, monto: total }] });
+    ui.pila.pop(); abrir("admRegaloListo", { id: g.id }); return;
+  }
+  const cmb = { nombre: x.nombre, items: x.items.map(i => ({ servicio_id: i.servicio_id, cant: i.cant })), precio: total, vigencia: +m.vig || 120 };
+  let pid = m.base || null;
+  if (!pid && m.guardar) { pid = "q" + uid(); db.d.paquetes.push(Object.assign({ id: pid, desc: x.normal > total ? "Ahorra " + Q(x.normal - total) + "." : "" }, cmb)); }
+  const pc = { id: uid(), clienta_id: k ? k.id : null, paquete_id: pid, combo: cmb, usos: {}, usadas: 0, comprado: Date.now(), regalo: rg };
+  db.d.paquetes_clienta.push(pc);
+  registrarCobro(null, { clienta_id: k ? k.id : null, lineas: [{ tipo: "paquete", ref: pid || pc.id, nombre: (regalo ? "Regalo · " : "") + cmb.nombre, precio: total, cant: 1, estilista_id: null }], metodos: [{ metodo: m.metodo, monto: total }] });
+  ui.pila.pop(); abrir("venListo", { id: pc.id });
+};
+MODALES.venListo = m => {
+  const p = db.obtener("paquetes_clienta", m.id); if (!p) return cab("Listo");
+  const q = paqDe(p), vence = fechaCorta(p.comprado + q.vigencia * DIA);
+  const lista = `<div class="lista ven-items">${paqItems(q).map(it => `<div class="row"><span class="row-t"><b>${esc(serv(it.servicio_id).nombre)}</b></span><b class="num">${it.cant} ${it.cant === 1 ? "sesión" : "sesiones"}</b></div>`).join("")}</div>`;
+  if (p.regalo) {
+    const g = Object.assign({ combo: q }, p.regalo), link = admLinkRegalo(g);
+    const txt = `Para ${g.para}: ${q.nombre} en ${MARCA.nombre} (${paqResumen(q)}). ${g.mensaje ? "«" + g.mensaje + "» " : ""}Ábrelo aquí: ${link}`;
+    return `${cab("Regalo listo", "Cobrado · vence el " + vence)}<div class="modal-c pila-l adm-listo">${tarjetaRegaloSVG(g)}
+      <div class="fila adm-listo-qr"><div class="adm-qr" data-qr="${esc(link)}"></div><div class="pila"><b>Se canjea en recepción</b><span class="tenue small">Código <b class="num">${g.codigo}</b></span><button class="btn btn-s btn-ch" data-a="admCopiar" data-tx="${esc(link)}">${ic("copy")}<span>Copiar link</span></button></div></div>
+      ${lista}</div>
+    <div class="modal-p"><a class="btn btn-s" href="${link}" target="_blank" rel="noopener">${ic("eye")}<span>Ver</span></a><a class="btn btn-p" href="${waLink(g.tel || MARCA.whatsapp, txt)}" target="_blank" rel="noopener">${ic("msg")}<span>Enviar por WhatsApp</span></a></div>`;
+  }
+  const k = cli(p.clienta_id), txt = `Hola ${k.nombre.split(" ")[0]}, ya tienes tu ${q.nombre} en ${MARCA.nombre}: ${paqResumen(q)}. Vence el ${vence}. Agenda cuando quieras: ${reservarURL()}`;
+  return `${cab("Combo vendido", esc(k.nombre))}<div class="modal-c pila-l">
+      <div class="ven-ok"><span class="listo-ic">${ic("check")}</span><div><b class="serif">${esc(q.nombre)}</b><p class="tenue small">Vence el ${vence}. Al cobrar cada cita aparece «Usar ${esc(q.nombre)}».</p></div></div>${lista}</div>
+    <div class="modal-p"><button class="btn btn-s" data-a="cerrar">Listo</button><a class="btn btn-p" href="${waLink(k.tel, txt)}" target="_blank" rel="noopener">${ic("msg")}<span>Avisarle por WhatsApp</span></a></div>`;
+};
+
 /* ---------- cobro ---------- */
 const CREDITOS = ["anticipo", "paquete", "membresia", "regalo"];
 function lineasCobro(m) {
@@ -557,7 +687,10 @@ function calcCobro(m) {
   let queda = total;
   const add = (o) => { const v = r2(Math.min(o.monto, queda)); if (v > 0) { creditos.push(Object.assign({}, o, { monto: v })); queda = r2(queda - v); } };
   if (c && c.anticipo && c.anticipo.pagado) add({ metodo: "anticipo", monto: c.anticipo.monto });
-  if (m.paquete) { const pc = db.obtener("paquetes_clienta", m.paquete), pq = pc && db.obtener("paquetes", pc.paquete_id), l = pq && L.find(x => x.ref === pq.servicio_id); if (l) add({ metodo: "paquete", monto: l.precio, ref: m.paquete }); }
+  if (m.paquete) {
+    const pc = db.obtener("paquetes_clienta", m.paquete), toma = {};
+    if (pc) L.filter(l => l.tipo === "servicio").forEach(l => { if (paqQuedan(pc, l.ref) - (toma[l.ref] || 0) > 0) { toma[l.ref] = (toma[l.ref] || 0) + 1; add({ metodo: "paquete", monto: l.precio, ref: m.paquete, sid: l.ref }); } });
+  }
   if (m.membresia) { const l = L.find(x => x.ref === m.membresia); if (l) add({ metodo: "membresia", monto: l.precio, ref: m.membresia }); }
   if (m.regalo) { const g = db.listar("tarjetas_regalo").find(x => x.codigo === m.regalo); if (g && g.saldo > 0) add({ metodo: "regalo", monto: g.saldo, ref: g.codigo }); }
   const propina = r2(sum(Object.values(m.propinas), v => +v || 0));
@@ -592,7 +725,7 @@ MODALES.cobro = m => {
   if (!m._init) { m._init = true; m.ancho = "ancho"; m.extra = []; m.propinas = {}; m.desc = "ninguno"; m.metodo = "tarjeta"; m.metodo2 = "efectivo"; m.dividir = false; }
   const x = calcCobro(m), c = x.c, k = x.kId ? cli(x.kId) : null;
   const ests = c ? estilistasDe(c) : [];
-  const pqs = k ? paquetesDe(k.id).filter(p => x.L.some(l => l.ref === p.paquete.servicio_id)) : [];
+  const pqs = k ? paquetesDe(k.id).filter(p => x.L.some(l => l.tipo === "servicio" && paqQuedan(p, l.ref) > 0)) : [];
   const membs = k ? x.L.filter(l => l.tipo === "servicio").map(l => ({ l, u: usosMembresia(k.id, l.ref) })).filter(y => y.u && y.u.quedan > 0) : [];
   const descs = [["ninguno", "Sin descuento"]];
   if (k && esCumpleMes(k.id)) descs.push(["cumple", "Cumpleaños " + cfg().promo_cumple + "%"]);
@@ -613,11 +746,11 @@ MODALES.cobro = m => {
         <button class="row click co-add" data-a="coPicker">${ic("plus")}<span class="row-t"><b>Agregar producto</b></span>${ic(m.picker ? "chev-d" : "chev-r")}</button>
         ${m.picker ? `<div class="co-picker">${db.listar("productos", p => p.tipo === "venta").map(p => `<button class="co-prod" data-a="coProd" data-id="${p.id}"><b>${esc(p.nombre)}</b><small>${Q(p.precio)}${p.stock <= 0 ? " · sin existencia" : p.stock <= p.minimo ? " · quedan " + p.stock : ""}</small></button>`).join("")}</div>` : ""}
       </div>
-      ${pqs.length || membs.length ? `<div class="pila co-usos">${pqs.map(p => `<button class="rc-tog co-uso ${m.paquete === p.id ? "on" : ""}" data-a="coPaquete" data-id="${p.id}">${ic("box")}<b>Usar «${esc(p.paquete.nombre)}»</b><small>Quedan ${p.paquete.sesiones - p.usadas} de ${p.paquete.sesiones}</small></button>`).join("")}
+      ${pqs.length || membs.length ? `<div class="pila co-usos">${pqs.map(p => `<button class="rc-tog co-uso ${m.paquete === p.id ? "on" : ""}" data-a="coPaquete" data-id="${p.id}">${ic("box")}<b>Usar «${esc(p.paquete.nombre)}»</b><small>Quedan ${paqSesiones(p.paquete) - paqUsadas(p)} de ${paqSesiones(p.paquete)}</small></button>`).join("")}
         ${membs.map(y => `<button class="rc-tog co-uso ${m.membresia === y.l.ref ? "on" : ""}" data-a="coMemb" data-v="${y.l.ref}">${ic("crown")}<b>${esc(y.l.nombre)} incluido en ${esc(membresiaDe(k.id).nombre)}</b><small>Quedan ${y.u.quedan} este mes</small></button>`).join("")}</div>` : ""}
       <div><p class="eyebrow">Descuento</p><div class="fila-w">${descs.map(([v, t]) => `<button class="rc-tog rc-tog-s ${m.desc === v ? "on" : ""}" data-a="coDesc" data-v="${v}"><b>${esc(t)}</b></button>`).join("")}</div>
         ${m.desc === "pct" || m.desc === "monto" ? `<input class="inp num co-mini mt" id="coDescV" data-i="coVal" data-k="descV" inputmode="decimal" placeholder="${m.desc === "pct" ? "10" : "50"}" value="${esc(m.descV || "")}" aria-label="Valor del descuento">` : ""}</div>
-      <div><p class="eyebrow">Tarjeta de regalo</p><div class="fila"><input class="inp co-mini" id="coRegalo" placeholder="GR-XXXX" autocomplete="off" autocapitalize="characters" value="${esc(m.regalo || "")}" aria-label="Código de la tarjeta de regalo"><button class="btn btn-s btn-ch" data-a="coRegalo">${m.regalo ? "Quitar" : "Aplicar"}</button></div>
+      <div><p class="eyebrow">Tarjeta o combo de regalo</p><div class="fila"><input class="inp co-mini" id="coRegalo" placeholder="GR-XXXX" autocomplete="off" autocapitalize="characters" value="${esc(m.regalo || "")}" aria-label="Código de la tarjeta de regalo"><button class="btn btn-s btn-ch" data-a="coRegalo">${m.regalo ? "Quitar" : "Aplicar"}</button></div>
         ${m.regalo ? (g => g ? `<p class="small tenue mt">${ic("gift")} ${esc(g.para)} · saldo ${Q(g.saldo)}</p>` : "")(db.listar("tarjetas_regalo").find(z => z.codigo === m.regalo)) : ""}</div>
       ${ests.length ? `<div><p class="eyebrow">Propina</p>${ests.map(e => { const base = sum(x.L.filter(li => li.tipo === "servicio" && li.estilista_id === e.id), li => li.precio), v = +m.propinas[e.id] || 0; return `<div class="co-prop">${avatar(e, 30)}<b class="trunc">${esc(e.nombre.split(" ")[0])}</b><span class="esp"></span>
         <div class="fila-w">${[0, 5, 10, 15].map(p => { const val = Math.round(base * p / 100 / 5) * 5; return `<button class="rc-tog rc-tog-s ${(p ? v === val && val > 0 : !v) ? "on" : ""}" data-a="coProp" data-e="${e.id}" data-v="${val}"><b>${p ? p + "%" : "No"}</b></button>`; }).join("")}
@@ -664,6 +797,14 @@ A.coRegalo = () => {
   const m = mt();
   if (m.regalo) { m.regalo = null; renderModal(); return; }
   const cod = ($("#coRegalo").value || "").trim().toUpperCase(), g = db.listar("tarjetas_regalo").find(z => z.codigo === cod);
+  const cb = !g && comboRegalo(cod);
+  if (cb) {
+    const kId = calcCobro(m).kId;
+    if (cb.clienta_id && cb.clienta_id !== kId) return toast("Ese combo ya lo canjeó " + cli(cb.clienta_id).nombre.split(" ")[0], "alert", "malo");
+    if (!kId) return toast("Escoge primero a la clienta que lo recibe", "alert");
+    if (!cb.clienta_id) { cb.clienta_id = kId; db.cambio(); toast(`«${paqDe(cb).nombre}» ya es de ${cli(kId).nombre.split(" ")[0]}`, "gift"); }
+    m.paquete = cb.id; renderModal(); return;
+  }
   if (!g) return toast("No encontré esa tarjeta de regalo", "alert", "malo");
   if (g.saldo <= 0) return toast("Esa tarjeta ya no tiene saldo", "alert", "malo");
   m.regalo = g.codigo; renderModal(); toast("Saldo disponible " + Q(g.saldo), "gift");
@@ -810,7 +951,7 @@ function fiPerfil(k, m) {
         ${ret.map(r => `<div class="card fi-ret"><span class="fi-ret-ic">${ic(r.cat.icono)}</span><div class="row-t"><b>Retoque de ${r.cat.nombre.toLowerCase()}</b><small>${r.toca < Date.now() ? "Le tocaba " + esc(diaRel(r.toca).toLowerCase()) : "Le toca " + esc(diaRel(r.toca).toLowerCase())}</small></div>
           <button class="btn btn-p btn-ch" data-a="fiRetoque" data-id="${k.id}" data-s="${r.ultima.items[0].servicio_id}">Agendar retoque</button></div>`).join("")}
         ${mb ? `<div class="card fi-mb" style="--c:${mb.color}"><span>${ic("crown")}</span><div class="row-t"><b>${esc(mb.nombre)}</b><small>${esc(mb.desc)}</small></div><b class="num">${Q(mb.precio)}/mes</b></div>` : ""}
-        ${pqs.map(p => `<div class="card fi-pq"><div class="fila">${ic("box")}<b class="trunc">${esc(p.paquete.nombre)}</b><span class="esp"></span><small class="tenue">${p.usadas}/${p.paquete.sesiones}</small></div><div class="barra"><i style="width:${p.usadas / p.paquete.sesiones * 100}%"></i></div></div>`).join("")}
+        ${pqs.map(p => `<div class="card fi-pq"><div class="fila">${ic("box")}<b class="trunc">${esc(p.paquete.nombre)}</b><span class="esp"></span><small class="tenue">${paqUsadas(p)}/${paqSesiones(p.paquete)}</small></div>${p.paquete.items ? `<small class="tenue">${esc(paqResumen(p.paquete))}</small>` : ""}<div class="barra"><i style="width:${paqUsadas(p) / paqSesiones(p.paquete) * 100}%"></i></div></div>`).join("")}
         ${regalos.map(g => `<div class="card fi-pq"><div class="fila">${ic("gift")}<b>Tarjeta ${esc(g.codigo)}</b><span class="esp"></span><b class="num">${Q(g.saldo)}</b></div></div>`).join("")}
         ${!ret.length && !mb && !pqs.length && !regalos.length ? `<div class="card card-suave">${vacio("Sin paquetes ni retoques pendientes", `<button class="btn btn-s btn-ch" data-a="fiRetoque" data-id="${k.id}">${ic("cal")}Nueva cita</button>`)}</div>` : ""}
       </div></div>`;

@@ -352,3 +352,7 @@ body.estudio-body { background: var(--fondo2); }
 .trabajo img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease); }
 .trabajo figcaption { position: absolute; left: 10px; bottom: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,.88); font-size: 12px; font-weight: 700; color: var(--tinta); }
 @media (hover: hover) and (pointer: fine) { .trabajo:hover img { transform: scale(1.04); } }
+.regalo-items { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px; font-size: 14px; }
+.regalo-items li { display: flex; justify-content: space-between; gap: 12px; }
+.regalo-items b { display: inline; font-size: 14px; }
+.regalo-saldo .regalo-nom { font-size: 26px; line-height: 1.15; }
